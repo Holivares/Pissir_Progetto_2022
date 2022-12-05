@@ -136,31 +136,10 @@ public class GestioneProgramma {
         return programm;
     }
 
-//    public boolean isBooked(int localId, String date, int startHour) {
-//        final String sql = "SELECT id FROM programmi WHERE azienda_agri_id = ? AND data_p = ? AND ora_inizio = ?";
-//
-//        boolean find = false;
-//
-//        try {
-//            Connection conn = DBConnect.getInstance().getConnection();
-//            PreparedStatement st = conn.prepareStatement(sql);
-//            st.setInt(1, serraId);
-//            st.setString(2, date);
-//            st.setInt(3, oraInizio);
-//            ResultSet rs = st.executeQuery();
-//
-//            if(rs.next()) find = true;
-//
-//            conn.close();
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return find;
-//    }
+
 
     /**
-     * Add a new task into the DB
+     * Aggiungi una nuova operazione nel DB
      * @param newProgramma the programm to be added
      */
     public void addProgrammaIrrig(Programma newProgramma) {
@@ -184,26 +163,25 @@ public class GestioneProgramma {
         }
     }
 
-//    public Programma updateReservation(int collaboratori, int id) {
-//        final String sql = "UPDATE programmi SET collaboratori = ? WHERE id = ?";
-//
-//        try {
-//            Connection conn = DBConnect.getInstance().getConnection();
-//            PreparedStatement st = conn.prepareStatement(sql);
-//            st.setInt(1, collaboratori);
-//            st.setInt(2, id);
-//
-//            st.executeUpdate();
-//            conn.close();
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        Programma programms = getReservation(id);
-//
-//        return programms;
-//    }
+    public Programma updateProgrammaIrrig(int id) {
+        final String sql = "UPDATE programmi  WHERE id = ?";
+
+        try {
+            Connection conn = DBConnect.getInstance().getConnection();
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setInt(1, id);
+
+            st.executeUpdate();
+            conn.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Programma programms = getProgrammaIrrig(id);
+
+        return programms;
+    }
 
     public void deleteProgrammaIrrig(int id) {
         final String sql = "DELETE FROM programmi WHERE id = ?";
@@ -241,61 +219,4 @@ public class GestioneProgramma {
         }
     }
 
-//    public List<Slot> getSlots(int aziendaAgricolaId) {
-//        List<Programma> allProgrammaIrrig = getAllProgrammaIrrig(aziendaAgricolaId);
-//
-//        int oraInizio = 8;
-//        int oraFine = 20;
-//        // Calcolo slot di tempo
-//        LocalDate dataInizio = LocalDate.now();
-//        LocalDate dataFine = dataInizio.plusWeeks(2);
-//
-//        List<Slot> slots = new LinkedList<>();
-//        LocalDate date = dataInizio;
-//
-//        String userId = Utils.getUserId();
-//
-//        while(!date.equals(dataFine)){
-//            if(date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
-//                date = date.plusDays(1);
-//                continue;
-//            }
-//
-//            int nowOra = LocalDateTime.now().getHour();
-//
-//            if(date == dataInizio) {
-//                if (nowOra < oraInizio) nowOra = 8;
-//                else if (nowOra > oraFine){
-//                    nowOra = 8;
-//                    date = date.plusDays(1);
-//                }
-//            } else nowOra = 8;
-//
-//            for (int ora =nowOra; ora<oraFine; ora++){
-//                int state = contains(allProgrammaIrrig, ora, userId, date);
-//                if(state == 0) // Lo slot è libero
-//                    slots.add(new Slot(ora + ":00-" + Integer.toString(ora+1) + ":00", Date.valueOf(date).toString(), true));
-//                else if(state == 2) {
-//                    slots.add(new Slot(ora + ":00-" + Integer.toString(ora+1) + ":00", Date.valueOf(date).toString(), false));
-//                }
-//            }
-//            date = date.plusDays(1);
-//        }
-//
-//        return slots;
-//    }
-//
-//
-//    private static int contains(List<Programma> allProgrammaIrrig, int oraInizio, String userId, LocalDate date){
-//        String dateString = Date.valueOf(date).toString();
-//        for(Programma programma: allProgrammaIrrig){
-//            if(programma.getOraInizio() == oraInizio && programma.getDate().equals(dateString)) {
-//                if(programma.getUserId().equals(userId))
-//                    return 2;
-//                else
-//                    return 1;
-//            }
-//        }
-//        return 0;
-//    }
 }
