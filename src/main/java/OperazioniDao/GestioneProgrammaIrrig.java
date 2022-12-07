@@ -17,7 +17,7 @@ public class GestioneProgrammaIrrig {
      */
 
     public List<ProgrammaIrrig> getAllProgrammaIrrig(QueryParamsMap queryParamsMap) {
-        final String sql = "SELECT id, data_p , ora_inizio, ora_fine, azienda_agri_id, utente_id FROM programmi";
+        final String sql = "SELECT id, data_p , ora_inizio, ora_fine, serra_id, utente_id,  FROM programmi";
 
         List<ProgrammaIrrig> programs = new LinkedList<>();
 
@@ -30,13 +30,13 @@ public class GestioneProgrammaIrrig {
             ProgrammaIrrig vecchia = null;
             while(rs.next()) {
                 if(vecchia == null){
-                    vecchia = new ProgrammaIrrig(rs.getInt("id"), rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"), rs.getInt("azienda_agri_id"), rs.getString("utente_id"));
+                    vecchia = new ProgrammaIrrig(rs.getInt("id"), rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"), rs.getInt("serra_id"), rs.getString("utente_id"));
                 }
-                else if(vecchia.getOraFine() == rs.getInt("ora_fine") && vecchia.getDate().equals(rs.getString("data_p")) && vecchia.getAziendaAgricolaId() == rs.getInt("azienda_agri_id") && vecchia.getUserId() == rs.getString("utente_id"))
-                    vecchia = new ProgrammaIrrig(vecchia.getId(), vecchia.getDate(), vecchia.getOraInizio(), rs.getInt("ora_fine"), vecchia.getAziendaAgricolaId(), vecchia.getUserId());
+                else if(vecchia.getOraFine() == rs.getInt("ora_fine") && vecchia.getDate().equals(rs.getString("data_p")) && vecchia.getSerraId() == rs.getInt("serra_id") && vecchia.getUserId() == rs.getString("utente_id"))
+                    vecchia = new ProgrammaIrrig(vecchia.getId(), vecchia.getDate(), vecchia.getOraInizio(), rs.getInt("ora_fine"), vecchia.getSerraId(), vecchia.getUserId());
                 else {
                     programs.add(vecchia);
-                    ProgrammaIrrig p = new ProgrammaIrrig(rs.getInt("id"), rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"), rs.getInt("azienda_agri_id"), rs.getString("utente_id"));
+                    ProgrammaIrrig p = new ProgrammaIrrig(rs.getInt("id"), rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"), rs.getInt("serra_id"), rs.getString("utente_id"));
                     programs.add(p);
                 }
             }
@@ -50,7 +50,7 @@ public class GestioneProgrammaIrrig {
     }
 
     public List<ProgrammaIrrig> getAllProgrammaIrrigUser(String utenteId, QueryParamsMap queryParamsMap) {
-        final String sql = "SELECT id, data_p, ora_inizio, ora_fine, azienda_agri_id, utente_id FROM programmi WHERE utente_id = ?";
+        final String sql = "SELECT id, data_p, ora_inizio, ora_fine, serra_id, utente_id FROM programmi WHERE utente_id = ?";
 
         List<ProgrammaIrrig> programs = new LinkedList<>();
 
@@ -62,7 +62,7 @@ public class GestioneProgrammaIrrig {
             ResultSet rs = st.executeQuery();
 
             while(rs.next()) {
-                ProgrammaIrrig p = new ProgrammaIrrig(rs.getInt("id"), rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"),rs.getInt("azienda_agri_id"),rs.getString("utente_id"));
+                ProgrammaIrrig p = new ProgrammaIrrig(rs.getInt("id"), rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"),rs.getInt("serra_id"),rs.getString("utente_id"));
                 programs.add(p);
             }
 
@@ -79,16 +79,18 @@ public class GestioneProgrammaIrrig {
         String date = "";
         String oraInizio = "";
         String oraFine = "";
-        String aziendaAgricolaId = "";
+        String serraId = "";
         String userId = "";
         if (queryParamsMap.hasKey("date")) date = queryParamsMap.get("date").value().toLowerCase();
         if (queryParamsMap.hasKey("oraInizio")) oraInizio = queryParamsMap.get("oraInizio").value().toLowerCase();
         if (queryParamsMap.hasKey("oraFine")) oraFine = queryParamsMap.get("oraFine").value().toLowerCase();
-        if (queryParamsMap.hasKey("aziendaAgricolaId")) aziendaAgricolaId = queryParamsMap.get("aziendaAgricolaId").value().toLowerCase();
+        if (queryParamsMap.hasKey("serraId")) serraId = queryParamsMap.get("serraId").value().toLowerCase();
         if (queryParamsMap.hasKey("userId")) userId = queryParamsMap.get("userId").value().toLowerCase();
 
+
+
         for(int i = 0; i<programs.size(); i++){
-            if (!programs.get(i).getDate().toLowerCase().contains(date) || !String.valueOf(programs.get(i).getOraInizio()).contains(oraInizio) || !String.valueOf(programs.get(i).getOraFine()).contains(oraFine) || !String.valueOf(programs.get(i).getAziendaAgricolaId()).contains(aziendaAgricolaId) || !String.valueOf(programs.get(i).getUserId()).contains(userId)) {
+            if (!programs.get(i).getDate().toLowerCase().contains(date) || !String.valueOf(programs.get(i).getOraInizio()).contains(oraInizio) || !String.valueOf(programs.get(i).getOraFine()).contains(oraFine) || !String.valueOf(programs.get(i).getSerraId()).contains(serraId) || !String.valueOf(programs.get(i).getUserId()).contains(userId)) {
                 programs.remove(i);
                 i--;
             }
@@ -97,21 +99,21 @@ public class GestioneProgrammaIrrig {
         return programs;
     }
 
-    public List<ProgrammaIrrig> getAllProgrammaIrrigAzienda(int aziendaAgricolaId) {
-        final String sql = "SELECT id, data_p, ora_inizio, ora_fine, azienda_agri_id, utente_id FROM programmi WHERE azienda_agri_id = ?";
+    public List<ProgrammaIrrig> getAllProgrammaIrrigSerra(int serraId) {
+        final String sql = "SELECT id, data_p, ora_inizio, ora_fine, serra_id, utente_id FROM programmi WHERE serra_id = ?";
 
         List<ProgrammaIrrig> programs = new LinkedList<>();
 
         try {
             Connection co = DBConnect.getInstance().getConnection();
             PreparedStatement st = co.prepareStatement(sql);
-            st.setInt(1, aziendaAgricolaId);
+            st.setInt(1, serraId);
 
             ResultSet rs = st.executeQuery();
 
             while(rs.next()) {
                 String utenteId = rs.getString("utente_id");
-                ProgrammaIrrig p = new ProgrammaIrrig(rs.getInt("id"), rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"), aziendaAgricolaId, utenteId);
+                ProgrammaIrrig p = new ProgrammaIrrig(rs.getInt("id"), rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"), serraId, utenteId);
                 programs.add(p);
             }
 
@@ -124,7 +126,7 @@ public class GestioneProgrammaIrrig {
     }
 
     public ProgrammaIrrig getProgrammaIrrig(int id) {
-        final String sql = "SELECT id, data_p, ora_inizio, ora_fine, azienda_agri_id, utente_id FROM programmi WHERE id = ?";
+        final String sql = "SELECT id, data_p, ora_inizio, ora_fine, serra_id, utente_id FROM programmi WHERE id = ?";
 
         ProgrammaIrrig programm = null;
 
@@ -135,7 +137,7 @@ public class GestioneProgrammaIrrig {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                programm = new ProgrammaIrrig(id, rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"), rs.getInt("azienda_agri_id"), rs.getString("utente_id"));
+                programm = new ProgrammaIrrig(id, rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"), rs.getInt("serra_id"), rs.getString("utente_id"));
             }
 
             co.close();
@@ -153,7 +155,7 @@ public class GestioneProgrammaIrrig {
      * @param newProgramma the programm to be added
      */
     public void addProgrammaIrrig(ProgrammaIrrig newProgramma) {
-        final String sql = "INSERT INTO programmi (data_p, ora_inizio, ora_fine, azienda_gri_id, utente_id) VALUES (?,?,?,?,?,?)";
+        final String sql = "INSERT INTO programmi (data_p, ora_inizio, ora_fine, serra_id, utente_id) VALUES (?,?,?,?,?,?)";
 
         try {
             Connection co = DBConnect.getInstance().getConnection();
@@ -161,7 +163,7 @@ public class GestioneProgrammaIrrig {
             st.setString(1, newProgramma.getDate());
             st.setInt(2, newProgramma.getOraInizio());
             st.setInt(3, newProgramma.getOraFine());
-            st.setInt(4, newProgramma.getAziendaAgricolaId());
+            st.setInt(4, newProgramma.getSerraId());
             st.setString(5, newProgramma.getUserId());
 
             st.executeUpdate();
@@ -209,16 +211,16 @@ public class GestioneProgrammaIrrig {
         }
     }
 
-    public void deleteProgrammaIrrig(String date, int oraInizio, int aziendaAgricolaId, String userId)
+    public void deleteProgrammaIrrig(String date, int oraInizio, int serraId, String userId)
     {
-        final String sql = "DELETE FROM programmi WHERE data_p = ? AND ora_inizio = ? AND azienda_agri_id = ? AND utente_id = ?";
+        final String sql = "DELETE FROM programmi WHERE data_p = ? AND ora_inizio = ? AND serra_id = ? AND utente_id = ?";
 
         try {
             Connection co = DBConnect.getInstance().getConnection();
             PreparedStatement st = co.prepareStatement(sql);
             st.setString(1, date);
             st.setInt(2, oraInizio);
-            st.setInt(3, aziendaAgricolaId);
+            st.setInt(3, serraId);
             st.setString(4, userId);
 
             st.executeUpdate();
