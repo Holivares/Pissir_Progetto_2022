@@ -10,20 +10,23 @@ public class ProgrammaIrrig {
     private String date;
     private int oraInizio;
     private int oraFine;
-    private int serraId;
-    private String userId;
+    private int aziendaAgricolaId;
+    private String serraId;
+
+
+//    private String userId;
 
     /**
     @param id rappresenta un singolo programma d'irrigazione
     */
 
-    public ProgrammaIrrig(int id, String date, int oraInizio, int oraFine, int serraId, String userId){
+    public ProgrammaIrrig(int id, String date, int oraInizio, int oraFine, int aziendaAgricolaId , String serraId){
 
         this.id = id;
         this.date = date;
         this.oraInizio = oraInizio;
         this.oraFine = oraFine;
-        this.userId = userId;
+        this.aziendaAgricolaId = aziendaAgricolaId;
         this.serraId = serraId;
     }
 
@@ -31,13 +34,14 @@ public class ProgrammaIrrig {
      * Overloaded constructor. Crea un programma d'irrigazione senza id dato.
      *
      */
-    public ProgrammaIrrig(String date, int oraInizio, int oraFine, int serraId, String userId){
+    public ProgrammaIrrig(String date, int oraInizio, int oraFine, int aziendaAgricolaId, String serraId){
 
         this.date = date;
         this.oraInizio = oraInizio;
         this.oraFine = oraFine;
+        this.aziendaAgricolaId = aziendaAgricolaId;
         this.serraId = serraId;
-        this.userId = userId;
+
 
     }
 
@@ -56,14 +60,9 @@ public class ProgrammaIrrig {
     public int getOraFine() {
         return oraFine;
     }
-
-    public int getSerraId() {
-        return serraId;
+    public int getAziendaAgricolaId() {
+        return aziendaAgricolaId;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-
+    public String getSerraId() { return serraId; }
 }

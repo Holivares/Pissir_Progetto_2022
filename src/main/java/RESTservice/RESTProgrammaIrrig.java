@@ -54,10 +54,10 @@ public class RESTProgrammaIrrig {
                 int i = schedule.indexOf(':');
                 int oraInizio = Integer.valueOf(schedule.substring(0, i));
                 int oraFine = Integer.valueOf(schedule.substring(i+4, schedule.length()-3));
-                String userId = String.valueOf(request.params(":userId"));
-                int serraId = Integer.valueOf(request.params(":serraId"));
+                int aziendaAgricolaId = Integer.valueOf(request.params(":aziendaAgricolaId"));
+                String serraId = String.valueOf(request.params(":serraId"));
 
-                ProgrammaIrrig program = new ProgrammaIrrig(date, oraInizio, oraFine, serraId, userId);
+                ProgrammaIrrig program = new ProgrammaIrrig(date, oraInizio, oraFine, aziendaAgricolaId, serraId);
                 programmaDao.addProgrammaIrrig(program);
 
                 // if success, prepare a suitable HTTP response code

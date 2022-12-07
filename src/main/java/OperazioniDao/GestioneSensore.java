@@ -20,7 +20,7 @@ public class GestioneSensore {
      * @param queryParamsMap
      */
     public List<Sensore> getAllSensors(QueryParamsMap queryParamsMap) {
-        final String sql = "SELECT id, description,tipo, azienda_agri_id,serra_id FROM sensori";
+        final String sql = "SELECT id, description,tipo, azienda_agri_id, serra_id FROM sensori";
 
         List<Sensore> sensori = new LinkedList<>();
 

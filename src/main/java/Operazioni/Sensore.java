@@ -8,7 +8,6 @@ public class Sensore {
     private String type;
     private int aziendaAgricolaId;
 
-//    private int serraId;
 
     /**
      * sensore main constructore.
@@ -21,7 +20,6 @@ public class Sensore {
         this.description = description;
         this.type = type;
         this.aziendaAgricolaId = aziendaAgricolaId;
-//        this.serraId = serraId;
     }
     /**
      * Overloaded constructor. Crea un programma d'irrigazione senza id dato.
@@ -32,7 +30,7 @@ public class Sensore {
         this.description = description;
         this.type = type;
         this.aziendaAgricolaId = aziendaAgricolaId;
-//        this.serraId = serraId;
+
     }
     /*** Getters **/
     public int getId() {
@@ -49,7 +47,4 @@ public class Sensore {
         return aziendaAgricolaId;
     }
 
-//    public int getSerraId() {
-//        return serraId;
-//    }
 }
