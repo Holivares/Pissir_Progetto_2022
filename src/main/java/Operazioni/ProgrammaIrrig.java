@@ -4,7 +4,7 @@ package Operazioni;
 /**
  * Descrive un'operazione e le sue proprietà.
  */
-public class Programma {
+public class ProgrammaIrrig {
 
     private int id;
     private String date;
@@ -17,7 +17,7 @@ public class Programma {
     @param id rappresenta un singolo programma d'irrigazione
     */
 
-    public Programma(int id, String date,int oraInizio, int oraFine, int aziendaAgricolaId, String userId){
+    public ProgrammaIrrig(int id, String date, int oraInizio, int oraFine, int aziendaAgricolaId, String userId){
 
         this.id = id;
         this.date = date;
@@ -31,7 +31,7 @@ public class Programma {
      * Overloaded constructor. Crea un programma d'irrigazione senza id dato.
      *
      */
-    public Programma(String date,int oraInizio, int oraFine, int aziendaAgricolaId, String userId){
+    public ProgrammaIrrig(String date, int oraInizio, int oraFine, int aziendaAgricolaId, String userId){
 
         this.date = date;
         this.oraInizio = oraInizio;
