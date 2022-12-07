@@ -10,7 +10,6 @@ public class ProgrammaIrrig {
     private String date;
     private int oraInizio;
     private int oraFine;
-    private int aziendaAgricolaId;
     private int serraId;
     private String userId;
 
@@ -24,7 +23,6 @@ public class ProgrammaIrrig {
         this.date = date;
         this.oraInizio = oraInizio;
         this.oraFine = oraFine;
-        this.aziendaAgricolaId = aziendaAgricolaId;
         this.userId = userId;
         this.serraId = serraId;
     }
