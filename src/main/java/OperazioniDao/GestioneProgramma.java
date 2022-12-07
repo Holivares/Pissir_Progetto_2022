@@ -24,14 +24,14 @@ public class GestioneProgramma {
         List<Programma> programs = new LinkedList<>();
 
         try{
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
             while(rs.next()){
                 Programma p = new Programma(rs.getInt("id"), rs.getString("data_p"),rs.getInt("ora_inizio"), rs.getInt("ora_fine"), rs.getInt("azienda_agri_id"), rs.getString("utente_id"));
                 programs.add(p);
             }
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,8 +45,8 @@ public class GestioneProgramma {
         List<Programma> programs = new LinkedList<>();
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
             st.setString(1, utenteId);
 
             ResultSet rs = st.executeQuery();
@@ -56,7 +56,7 @@ public class GestioneProgramma {
                 programs.add(p);
             }
 
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -93,8 +93,8 @@ public class GestioneProgramma {
         List<Programma> programs = new LinkedList<>();
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
             st.setInt(1, aziendaAgricolaId);
 
             ResultSet rs = st.executeQuery();
@@ -105,7 +105,7 @@ public class GestioneProgramma {
                 programs.add(p);
             }
 
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -119,8 +119,8 @@ public class GestioneProgramma {
         Programma programm = null;
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
             st.setInt(1, id);
             ResultSet rs = st.executeQuery();
 
@@ -128,7 +128,7 @@ public class GestioneProgramma {
                 programm = new Programma(id, rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"), rs.getInt("azienda_agri_id"), rs.getString("utente_id"));
             }
 
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -146,8 +146,8 @@ public class GestioneProgramma {
         final String sql = "INSERT INTO programmi (data_p, ora_inizio, ora_fine, azienda_gri_id, utente_id) VALUES (?,?,?,?,?,?)";
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
             st.setString(1, newProgramma.getDate());
             st.setInt(2, newProgramma.getOraInizio());
             st.setInt(3, newProgramma.getOraFine());
@@ -156,7 +156,7 @@ public class GestioneProgramma {
 
             st.executeUpdate();
 
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -167,12 +167,12 @@ public class GestioneProgramma {
         final String sql = "UPDATE programmi  WHERE id = ?";
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
             st.setInt(1, id);
 
             st.executeUpdate();
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -187,12 +187,12 @@ public class GestioneProgramma {
         final String sql = "DELETE FROM programmi WHERE id = ?";
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
             st.setInt(1, id);
 
             st.executeUpdate();
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -204,15 +204,15 @@ public class GestioneProgramma {
         final String sql = "DELETE FROM programmi WHERE data_p = ? AND ora_inizio = ? AND azienda_agri_id = ? AND utente_id = ?";
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
             st.setString(1, date);
             st.setInt(2, oraInizio);
             st.setInt(3, aziendaAgricolaId);
             st.setString(4, userId);
 
             st.executeUpdate();
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
