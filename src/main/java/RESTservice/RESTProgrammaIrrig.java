@@ -4,7 +4,6 @@ import Operazioni.ProgrammaIrrig;
 import OperazioniDao.GestioneProgrammaIrrig;
 import com.google.gson.Gson;
 import spark.QueryParamsMap;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,7 @@ public class RESTProgrammaIrrig {
     public static void REST(Gson gson, String baseURL){
         GestioneProgrammaIrrig programmaDao = new GestioneProgrammaIrrig();
 
-        // get all operqwioni
+        // get all operazioni
         get(baseURL + "/programmi", (request, response) -> {
             // set a proper response code and type
             response.type("application/json");
@@ -26,7 +25,7 @@ public class RESTProgrammaIrrig {
             List<ProgrammaIrrig> allPrograms = programmaDao.getAllProgrammaIrrig(request.queryMap());
             // prepare the JSON-related structure to return
             Map<String, List<ProgrammaIrrig>> finalJson = new HashMap<>();
-            finalJson.put("users", allPrograms);
+            finalJson.put("programmi", allPrograms);
 
             return allPrograms;
         }, gson::toJson);
