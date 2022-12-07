@@ -1,5 +1,6 @@
 package OperazioniDao;
 
+import Operazioni.ProgrammaIrrig;
 import Operazioni.Sensore;
 import Utils.DBConnect;
 import spark.QueryParamsMap;
@@ -19,7 +20,7 @@ public class GestioneSensore {
      * @param queryParamsMap
      */
     public List<Sensore> getAllSensors(QueryParamsMap queryParamsMap) {
-        final String sql = "SELECT id, descrizione, azienda_agri_id FROM sensori";
+        final String sql = "SELECT id, description,tipo, azienda_agri_id,serra_id FROM sensori";
 
         List<Sensore> sensori = new LinkedList<>();
 
@@ -31,7 +32,7 @@ public class GestioneSensore {
 
             while (rs.next()) {
 
-                Sensore sensore = new Sensore(rs.getInt("id"), rs.getString("descrizione"),rs.getInt("azienda_agri_id"));
+                Sensore sensore = new Sensore(rs.getInt("id"), rs.getString("description"),rs.getString("tipo"),rs.getInt("azienda_agri_id"));
                 sensori.add(sensore);
             }
 
@@ -42,17 +43,18 @@ public class GestioneSensore {
         }
         return where(queryParamsMap, sensori);
     }
-
     private List<Sensore> where(QueryParamsMap queryParamsMap, List<Sensore> sensori){
         String description = "";
+        String type = "";
         String aziendaAgricolaId = "";
-        if(queryParamsMap.hasKey("description")) description = queryParamsMap.get("description").value().toLowerCase();
-        if(queryParamsMap.hasKey("aziendaAgricolaId ")) aziendaAgricolaId  = queryParamsMap.get("aziendaAgricolaId ").value().toLowerCase();
+//        String serraId = "";
+        if (queryParamsMap.hasKey("date")) description = queryParamsMap.get("description").value().toLowerCase();
+        if (queryParamsMap.hasKey("oraInizio")) type= queryParamsMap.get("type").value().toLowerCase();
+        if (queryParamsMap.hasKey("oraFine")) aziendaAgricolaId = queryParamsMap.get("aziendaAgricolaId").value().toLowerCase();
+//        if (queryParamsMap.hasKey("serraId")) serraId = queryParamsMap.get("serraId").value().toLowerCase();
 
-        for(int i = 0; i<sensori.size(); i++) {
-            if (!sensori.get(i).getDescription().toLowerCase().contains(description) ||
-                    !String.valueOf(sensori.get(i).getAziendaAgricolaId()).contains(aziendaAgricolaId)) {
-
+        for(int i = 0; i<sensori.size(); i++){
+            if (!sensori.get(i).getDescription().toLowerCase().contains(description) || !String.valueOf(sensori.get(i).getType()).contains(type) || !String.valueOf(sensori.get(i).getAziendaAgricolaId()).contains(aziendaAgricolaId)) {
                 sensori.remove(i);
                 i--;
             }
@@ -63,25 +65,25 @@ public class GestioneSensore {
 
     public Sensore getSensorOfAzienda(int aziendaAgricolaId)
     {
-        Sensore sensore = null;
-        final String sql = "SELECT id, descrizione, azienda_agri_id FROM sensori WHERE azienda_agri_id = ?";
+        Sensore sensori = null;
+        final String sql = "SELECT id, descrizione, tipo, azienda_agri_id, FROM sensori WHERE azienda_agri_id = ?";
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
             st.setInt(1, aziendaAgricolaId);
 
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                sensore = new Sensore(rs.getInt("id"), rs.getString("descrizione"), aziendaAgricolaId);
+                sensori = new Sensore(rs.getInt("id"), rs.getString("descrizione"), rs.getString("tipo"),aziendaAgricolaId);
             }
 
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return sensore;
+        return sensori;
     }
 }
