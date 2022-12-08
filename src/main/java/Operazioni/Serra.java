@@ -1,25 +1,28 @@
 package Operazioni;
 
-public class Serre {
+public class Serra {
     private int id;
     private String aziendaAgricolaId;
     private String descrizione;
-    private String tipo ;
+    private String tipoColtura ;
 
 
-    public Serre(int id, String idAzienda, String descrizione, String tipo) {
+    public Serra(int id, String idAzienda, String descrizione, String tipo) {
         this.id = id;
         this.aziendaAgricolaId = aziendaAgricolaId;
         this.descrizione = descrizione;
-        this.tipo = tipo;
+        this.tipoColtura = tipoColtura;
 
     }
-
-    public Serre(String idAzienda, String descrizione, String tipo)
+ /**
+     * Overloaded constructore. Crea una serra senza id dato.
+     *
+     */
+    public Serra(String idAzienda, String descrizione, String tipoColtura)
     {
         this.aziendaAgricolaId = aziendaAgricolaId;
         this.descrizione = descrizione;
-        this.tipo = tipo;
+        this.tipoColtura = tipoColtura;
     }
 
 
@@ -35,9 +38,8 @@ public class Serre {
         return descrizione;
     }
 
-
     public String getTipo() {
-        return tipo;
+        return tipoColtura;
     }
 
 

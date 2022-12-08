@@ -15,7 +15,7 @@ import java.util.List;
 public class GestioneSensore {
 
     /**
-     * Get tutti Sensori dal DB
+     * ottieni tutti Sensori dal DB
      * @return una lista dei sensori, o una lista vuota se nessun sensore è disponibile
      * @param queryParamsMap
      */

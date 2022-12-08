@@ -1,18 +1,18 @@
 package Operazioni;
 
-public class AziendaAgri {
+public class AziendaAgricola {
     private int id;
     private String nome;
 
 
 
-    public AziendaAgri(int id, String nome) {
+    public AziendaAgricola(int id, String nome) {
         this.id = id;
         this.nome = nome;
 
     }
 
-    public  AziendaAgri(String nome){
+    public AziendaAgricola(String nome){
         this.nome = nome;
     }
 

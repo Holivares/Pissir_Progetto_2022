@@ -2,9 +2,7 @@ package Operazioni;
 
 public class Sensore {
     private int id;
-
     private String description;
-
     private String type;
     private int aziendaAgricolaId;
 
