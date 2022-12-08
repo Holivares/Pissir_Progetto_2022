@@ -2,72 +2,83 @@ package RESTservice;
 
 import Operazioni.ProgrammaIrrig;
 import OperazioniDao.GestioneProgrammaIrrig;
+import Ruoli.Utils;
 import com.google.gson.Gson;
 import spark.QueryParamsMap;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import static spark.Spark.*;
 import static spark.Spark.halt;
 
 public class RESTProgrammaIrrig {
-    public static void REST(Gson gson, String baseURL){
-        GestioneProgrammaIrrig programmaDao = new GestioneProgrammaIrrig();
+    public static void REST(Gson gson, String baseURL) {
+        GestioneProgrammaIrrig programmaIrrigDao = new GestioneProgrammaIrrig();
 
-        // get all operazioni
-        get(baseURL + "/programmi", (request, response) -> {
+        // get all the tasks
+        get(baseURL + "/programmairrig", (request, response) -> {
             // set a proper response code and type
             response.type("application/json");
             response.status(200);
 
-            // get all operazioni dal DB
-            List<ProgrammaIrrig> allPrograms = programmaDao.getAllProgrammaIrrig(request.queryMap());
-            // prepare the JSON-related structure to return
-            Map<String, List<ProgrammaIrrig>> finalJson = new HashMap<>();
-            finalJson.put("programmi", allPrograms);
+            String userId = Utils.getUserId();
 
-            return allPrograms;
+            List<ProgrammaIrrig> allProgrammiIrigg = new LinkedList<>();
+
+            if (Utils.getRole().equals("agricoltori"))
+                allProgrammiIrigg = programmaIrrigDao.getAllProgrammaIrrig(request.queryMap());
+            else if (Utils.getRole().equals("collaboratori"))
+                allProgrammiIrigg = programmaIrrigDao.getAllProgrammaIrrigUser(userId, request.queryMap());
+            else
+                halt(401);
+
+            return allProgrammiIrigg;
+
         }, gson::toJson);
 
-        delete(baseURL + "/programmi/:id", "application/json", (request, response) -> {
-            if(request.params(":id")!=null) {
+        delete(baseURL + "/programmairrig/:id", "application/json", (request, response) -> {
+            if (Utils.getRole().equals("agricoltori")) {
+            } else if (Utils.getRole().equals("collaboratori")) {
+                if (!programmaIrrigDao.getProgrammaIrrig(Integer.valueOf(request.params(":id"))).getUserId().equals(Utils.getUserId()))
+                    halt(401);
+            } else halt(401);
+
+            if (request.params(":id") != null) {
                 // add the task into the DB
-                programmaDao.deleteProgrammaIrrig(Integer.valueOf(request.params(":id")));
+                programmaIrrigDao.deleteProgrammaIrrig(Integer.valueOf(request.params(":id")));
                 response.status(201);
-            }
-            else {
-                halt(403);
+            } else {
+                halt(400);
             }
             return "";
         });
 
-        post(baseURL + "/AziendaAgricolaId/:utenti", "application/json", (request, response) -> {
+        put(baseURL + "/programmairrig/updateagricoltori/:id", "application/json", (request, response) -> {
+            if (Utils.getRole().equals("agricoltori")) {
+            } else if (Utils.getRole().equals("collaboratori") || Utils.getRole().equals("agricoltori")) {
+                if (!programmaIrrigDao.getProgrammaIrrig(Integer.valueOf(request.params(":id"))).getUserId().equals(Utils.getUserId()))
+                    halt(401);
+            } else halt(401);
+
             // get the body of the HTTP request
             Map addRequest = gson.fromJson(request.body(), Map.class);
-
+            ProgrammaIrrig programmairrig = null;
             // check whether everything is in place
-            if(addRequest!=null && addRequest.containsKey("schedule") && addRequest.containsKey("date")) {
-                String schedule = String.valueOf(addRequest.get("schedule"));
-                String date = String.valueOf(addRequest.get("date"));
+            if (request.params(":id") != null && addRequest != null && addRequest.containsKey("agricoltori") && String.valueOf(addRequest.get("agricoltori")).length() != 0) {
+                int agricoltori = (int) Math.round((Double) addRequest.get("agricoltori"));
+                if (agricoltori > 5 || agricoltori < 1)
+                    halt(400);
 
-                int i = schedule.indexOf(':');
-                int oraInizio = Integer.valueOf(schedule.substring(0, i));
-                int oraFine = Integer.valueOf(schedule.substring(i+4, schedule.length()-3));
-                int aziendaAgricolaId = Integer.valueOf(request.params(":aziendaAgricolaId"));
-                String serraId = String.valueOf(request.params(":serraId"));
-
-                ProgrammaIrrig program = new ProgrammaIrrig(date, oraInizio, oraFine, aziendaAgricolaId, serraId);
-                programmaDao.addProgrammaIrrig(program);
-
+                programmairrig = programmaIrrigDao.updateProgrammaIrrig(agricoltori, Integer.parseInt(String.valueOf(request.params(":id"))));
                 // if success, prepare a suitable HTTP response code
                 response.status(201);
-            }
-            else {
-                halt(403);
+            } else {
+                halt(400);
             }
 
-            return "";
+            return programmairrig;
         }, gson::toJson);
+
     }
 }

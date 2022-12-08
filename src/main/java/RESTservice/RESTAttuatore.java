@@ -1,4 +1,6 @@
 package RESTservice;
+import OperazioniModel.AttuaroreJs;
+import Ruoli.Utils;
 import com.google.gson.Gson;
 import Operazioni.Attuatore;
 import OperazioniDao.GestioneAttuatore;
@@ -14,21 +16,20 @@ public class RESTAttuatore {
 
     public static void REST(Gson gson, String baseURL){
 
-        GestioneAttuatore attuatoreDao = new GestioneAttuatore();
+        GestioneAttuatore actuatorDao = new GestioneAttuatore();
 
-        // get all the Operazione
-        get(baseURL + "/attuatore", (request, response) -> {
-            if(!Utils.getRoulo().equals("admin")) halt(401);
+        // get all the tasks
+        get(baseURL + "/actuators", (request, response) -> {
+            if(!Utils.getRole().equals("agricoltori")) halt(401);
             // set a proper response code and type
             response.type("application/json");
             response.status(200);
 
-            // get all Operazioni del  DB
-            GestioneAttuatore attuatoreDao;
-           List<AttuatoreJs> allAttuatore = attuatoreDao.getAllActuators(request.queryMap());
-             prepare the JSON-related structure to return
+            // get all tasks from the DB
+            List<AttuaroreJs> allActuators = actuatorDao.getAllActuators(request.queryMap());
+            // prepare the JSON-related structure to return
 
-           return allActuators;
+            return allActuators;
         }, gson::toJson);
 
         put(baseURL + "/actuators/updatemanual/:id", "application/json", (request, response) -> {
