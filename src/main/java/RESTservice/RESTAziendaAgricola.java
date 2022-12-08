@@ -1,40 +1,45 @@
 package RESTservice;
 
-import OperazioniDao.GestioneAziendaAgri;
+import Operazioni.AziendaAgricola;
+import OperazioniDao.GestioneAziendaAgricola;
+import Ruoli.Utils;
 import com.google.gson.Gson;
 
 import java.util.List;
+
+import static spark.Spark.get;
+import static spark.Spark.halt;
 
 public class RESTAziendaAgricola {
 
     public static void REST(Gson gson, String baseURL) {
 
-        GestioneAziendaAgricole aziendaDao = new GestioneAziendaAgricole();
+        GestioneAziendaAgricola aziendaDao = new GestioneAziendaAgricola();
 
-
-        get(baseURL + "/azienda", (request, response) -> {
-            if(!Utils.getRole().equals("admin")) halt(401);
+        // get all the tasks
+        get(baseURL + "/aziende", (request, response) -> {
+            if(!Utils.getRole().equals("agricoltori")) halt(401);
             // set a proper response code and type
             response.type("application/json");
             response.status(200);
 
+            // get all tasks from the DB
+            List<AziendaAgricola> allAziendeAgricole = aziendaDao.getAllAziendeAgricole(request.queryMap());
 
-            List<AziendaAgricola> allAziendaAgricola = aziendaDao.getAllAziendaAgricola(request.queryMap());
-
-            return allAziendaAgricola;
+            return allAziendeAgricole;
         }, gson::toJson);
 
-
-        get(baseURL + "/offices", (request, response) -> {
-            if(!Utils.getnome().equals("nome")) halt(401);
+        // get all the tasks
+        get(baseURL + "/serre", (request, response) -> {
+            if(!Utils.getRole().equals("collaboratoriri") && !Utils.getRole().equals("agricoltori")) halt(401);
             // set a proper response code and type
             response.type("application/json");
             response.status(200);
 
+            // get all tasks from the DB
+            List<AziendaAgricola> allAziendeAgricole = aziendaDao.getAllAziendeAgricole(request.queryMap());
 
-            List<RESTAziendaAgricola> allaziene = aziendeDao.getAllaziende(request.queryMap());
-
-            return allOffices;
+            return allAziendeAgricole;
         }, gson::toJson);
     }
 }

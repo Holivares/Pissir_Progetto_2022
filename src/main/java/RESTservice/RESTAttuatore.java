@@ -33,7 +33,7 @@ public class RESTAttuatore {
         }, gson::toJson);
 
         put(baseURL + "/actuators/updatemanual/:id", "application/json", (request, response) -> {
-            if(!Utils.getRole().equals("admin")) halt(401);
+            if(!Utils.getRole().equals("agricoltori")) halt(401);
             // get the body of the HTTP request
             Map addRequest = gson.fromJson(request.body(), Map.class);
             Attuatore actuator = null;

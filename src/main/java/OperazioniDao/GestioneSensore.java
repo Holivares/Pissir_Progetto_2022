@@ -1,7 +1,9 @@
 package OperazioniDao;
 
+import Operazioni.Misura;
 import Operazioni.ProgrammaIrrig;
 import Operazioni.Sensore;
+import OperazioniModel.SensoreJs;
 import Utils.DBConnect;
 import spark.QueryParamsMap;
 
@@ -14,76 +16,87 @@ import java.util.List;
 
 public class GestioneSensore {
 
+    GestioneMisura measureDao = new GestioneMisura();
     /**
-     * ottieni tutti Sensori dal DB
-     * @return una lista dei sensori, o una lista vuota se nessun sensore è disponibile
+     * Get all Sensors from the DB
+     * @return a list of Sensor, or an empty list if no Sensors are available
      * @param queryParamsMap
      */
-    public List<Sensore> getAllSensors(QueryParamsMap queryParamsMap) {
-        final String sql = "SELECT id, description,tipo,serra_id FROM sensori";
+    public List<SensoreJs> getAllSensors(QueryParamsMap queryParamsMap) {
+        final String sql = "SELECT id, descrizione, tipo, locale_id FROM sensori";
 
-        List<Sensore> sensori = new LinkedList<>();
+        List<SensoreJs> sensors = new LinkedList<>();
 
         try {
-            Connection co = DBConnect.getInstance().getConnection();
-            PreparedStatement st = co.prepareStatement(sql);
+            Connection conn = DBConnect.getInstance().getConnection();
+            PreparedStatement st = conn.prepareStatement(sql);
 
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
+                Sensore sensor = new Sensore(rs.getInt("id"), rs.getString("descrizione"), rs.getString("tipo"), rs.getInt("locale_id"));
+                Misura measure = measureDao.getLastMeasureOfSensor(sensor);
+                String measurement = "";
+                try {
+                    measurement = measure.getMisurazioni();
+                    if(measure.getTipo().equals("temperatura"))
+                        measurement += "°C";
+                    else measurement += "%";
+                } catch(NullPointerException e) {}
 
-                Sensore sensore = new Sensore(rs.getInt("id"), rs.getString("description"),rs.getString("tipo"),rs.getInt("serra_id"));
-                sensori.add(sensore);
+                SensoreJs sensorJs = new SensoreJs(sensor.getId(), rs.getString("descrizione"), rs.getString("tipo"), measurement, rs.getInt("locale_id"));
+                sensors.add(sensorJs);
             }
 
-            co.close();
+            conn.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return where(queryParamsMap, sensori);
+        return where(queryParamsMap, sensors);
     }
-    private List<Sensore> where(QueryParamsMap queryParamsMap, List<Sensore> sensori){
+
+    private List<SensoreJs> where(QueryParamsMap queryParamsMap, List<SensoreJs> sensors){
         String description = "";
-        String type = "";
         String serraId = "";
-//        String serraId = "";
-        if (queryParamsMap.hasKey("date")) description = queryParamsMap.get("description").value().toLowerCase();
-        if (queryParamsMap.hasKey("type")) type= queryParamsMap.get("type").value().toLowerCase();
-        if (queryParamsMap.hasKey("serraId")) serraId = queryParamsMap.get("serraId").value().toLowerCase();
+        if(queryParamsMap.hasKey("description")) description = queryParamsMap.get("description").value().toLowerCase();
+        if(queryParamsMap.hasKey("serraId")) serraId = queryParamsMap.get("serraId").value().toLowerCase();
 
+        for(int i = 0; i<sensors.size(); i++) {
+            if (!sensors.get(i).getDescription().toLowerCase().contains(description) ||
+                    !String.valueOf(sensors.get(i).getSerraId()).contains(serraId)) {
 
-        for(int i = 0; i<sensori.size(); i++){
-            if (!sensori.get(i).getDescription().toLowerCase().contains(description) || !String.valueOf(sensori.get(i).getType()).contains(type) || !String.valueOf(sensori.get(i).getSerraId()).contains(serraId)) {
-                sensori.remove(i);
+                sensors.remove(i);
                 i--;
             }
         }
 
-        return sensori;
+        return sensors;
     }
 
-    public Sensore getSensorOfSerra(int serraId)
+    public Sensore getSensorOfLocal(int localId, String type)
     {
-        Sensore sensori = null;
-        final String sql = "SELECT id, descrizione, tipo, serra_id, FROM sensori WHERE serra_id = ?";
+        if(type.equals("temperatura") || type.equals("umidita")) type = "temperatura,umidita";
+        Sensore sensor = null;
+        final String sql = "SELECT id, descrizione, tipo, locale_id FROM sensori WHERE locale_id = ? AND tipo = ?";
 
         try {
-            Connection co = DBConnect.getInstance().getConnection();
-            PreparedStatement st = co.prepareStatement(sql);
-            st.setInt(1, serraId);
+            Connection conn = DBConnect.getInstance().getConnection();
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setInt(1, localId);
+            st.setString(2, type);
 
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                sensori = new Sensore(rs.getInt("id"), rs.getString("descrizione"), rs.getString("tipo"),serraId);
+                sensor = new Sensore(rs.getInt("id"), rs.getString("descrizione"), type, localId);
             }
 
-            co.close();
+            conn.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return sensori;
+        return sensor;
     }
 }

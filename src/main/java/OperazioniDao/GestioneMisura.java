@@ -113,34 +113,6 @@ public class GestioneMisura {
         }
     }
 
-    public Misura getLastMisuriOfSensore(Sensore sensore){
-        String sql = "";
-        if(sensore.getTipo().equals("temperatura,umidita "))
-            sql = "SELECT id, tipo, misurazione, data, sensore_id, locale_id FROM misure WHERE sensore_id = ? AND tipo = ? ORDER BY id DESC LIMIT 1";
-        else
-            sql = "SELECT id, tipo, misurazione, data, sensore_id, locale_id FROM misure WHERE sensore_id = ? ORDER BY id DESC LIMIT 1";
-
-        Misura misura = null;
-
-        try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
-            st.setInt(1, sensore.getId());
-            if(sensore.getTipo().equals("temperatura,umidita")) st.setString(2, "temperatura");
-            ResultSet rs = st.executeQuery();
-
-            while (rs.next()) {
-                misura= new Misura(rs.getInt("id"), rs.getString("tipo"), rs.getString("misurazione"), rs.getString("data"), sensor.getId(), rs.getInt("locale_id"));
-            }
-
-            conn.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return misura;
-    }
-
     public void truncateTable(){
         final String sql = "TRUNCATE TABLE misure";
         try {
@@ -155,4 +127,33 @@ public class GestioneMisura {
             e.printStackTrace();
         }
     }
+
+    public Misura getLastMeasureOfSensor(Sensore sensor){
+        String sql = "";
+        if(sensor.getType().equals("temperatura,umidita"))
+            sql = "SELECT id, tipo, misurazione, data, sensore_id, serra_id FROM misure WHERE sensore_id = ? AND tipo = ? ORDER BY id DESC LIMIT 1";
+        else
+            sql = "SELECT id, tipo, misurazione, data, sensore_id, serra_id FROM misure WHERE sensore_id = ? ORDER BY id DESC LIMIT 1";
+
+        Misura measure = null;
+
+        try {
+            Connection conn = DBConnect.getInstance().getConnection();
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setInt(1, sensor.getId());
+            if(sensor.getType().equals("temperatura,umidita")) st.setString(2, "temperatura");
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                measure= new Misura(rs.getInt("id"), rs.getString("tipo"), rs.getString("misurazione"), rs.getString("data"), sensor.getId(), rs.getInt("serra_id"));
+            }
+
+            conn.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return measure;
+    }
+
 }

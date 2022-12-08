@@ -11,6 +11,8 @@ public class AttuaroreJs {
     private String state;
 
     private String manual;
+
+    private String lastMeasure;
     private int serraId;
 
 
@@ -18,12 +20,13 @@ public class AttuaroreJs {
      * serra main constructor.
      *
      */
-    public AttuaroreJs(int id, String description, String type, String state, String manual, int serraId) {
+    public AttuaroreJs(int id, String description, String type, String state, String manual, String lastMeasure, int serraId) {
         this.id = id;
         this.description = description;
         this.type = type;
         this.state = state;
         this.manual = manual;
+        this.lastMeasure = lastMeasure;
         this.serraId = serraId;
     }
     public int getId() { return id; }
@@ -37,7 +40,11 @@ public class AttuaroreJs {
         return state;
     }
     public String getManual() { return manual; }
-    public int getLocalId() {
+
+    public String getLastMeasure() {
+        return lastMeasure;
+    }
+    public int getSerraId() {
         return serraId;
     }
 }

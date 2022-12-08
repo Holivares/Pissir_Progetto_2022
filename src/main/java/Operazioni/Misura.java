@@ -34,7 +34,7 @@ public class Misura {
      * Overloaded constructor. It create a reservation without a given id.
      *
      */
-    public Misura(String type, String misurazioni, String dateTime, int sensoreId, int serraId) {
+    public Misura(String tipo, String misurazioni, String dateTime, int sensoreId, int serraId) {
         this.id = 0;
         this.tipo = tipo;
         this.misurazioni = misurazioni;
