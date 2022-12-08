@@ -1,4 +1,5 @@
 package OperazioniDao;
+import OperazioniModel.AttuaroreJs;
 import spark.QueryParamsMap;
 import Operazioni.Attuatore;
 import Operazioni.Misura;
@@ -16,10 +17,10 @@ public class GestioneAttuatore {
     GestioneSensore sensoreDao = new GestioneSensore();
     GestioneMisura measureDao = new GestioneMisura();
 
-    public List<AttuatoreJs> getAllActuators(QueryParamsMap queryParamsMap) {
-        final String sql = "SELECT id, descrizione, tipo, stato, manuale, locale_id FROM attuatori";
+    public List<AttuaroreJs> getAllActuators(QueryParamsMap queryParamsMap) {
+        final String sql = "SELECT id, descrizione, tipo, stato, manuale, serra_id FROM attuatori";
 
-        List<AttuatoreJs> actuators = new LinkedList<>();
+        List<AttuaroreJs> actuators = new LinkedList< >();
 
         try {
             Connection conn = DBConnect.getInstance().getConnection();
@@ -37,7 +38,7 @@ public class GestioneAttuatore {
                     state = "Impostato su " + state + "°C";
                 } catch (NumberFormatException e) {}
 
-                Sensore sensor = sensoreDao.getSensoreOfSerra(rs.getInt("locale_id"), rs.getString("tipo"));
+                Sensore sensor = sensoreDao.getSensorOfSerra(rs.getInt("serra_id"), rs.getString("tipo"));
                 Misura measure = measureDao.getLastMisuriOfSensore(sensore);
                 String measurement = "";
                 try {
@@ -47,7 +48,7 @@ public class GestioneAttuatore {
                     else measurement += "%";
                 } catch(NullPointerException e) {}
 
-                AttuatoreJs t = new AttuatoreJs(rs.getInt("id"), rs.getString("descrizione"), rs.getString("tipo"), state, rs.getString("manuale"), measurement, rs.getInt("locale_id"));
+                AttuaroreJs t = new AttuaroreJs(rs.getInt("id"), rs.getString("descrizione"), rs.getString("tipo"), state, rs.getString("manuale"), measurement, rs.getInt("serra_id"));
                 actuators.add(t);
             }
 
@@ -62,14 +63,14 @@ public class GestioneAttuatore {
     private List<AttuatoreJs> where(QueryParamsMap queryParamsMap, List<AttuatoreJs> actuators){
         String description = "";
         String manual = "";
-        String localId = "";
+        String serraId = "";
         if(queryParamsMap.hasKey("description")) description = queryParamsMap.get("description").value().toLowerCase();
         if(queryParamsMap.hasKey("manual")) manual = queryParamsMap.get("manual").value().toLowerCase();
-        if(queryParamsMap.hasKey("localId")) localId = queryParamsMap.get("localId").value().toLowerCase();
+        if(queryParamsMap.hasKey("localId")) serraId = queryParamsMap.get("serraId").value().toLowerCase();
 
         for(int i = 0; i<actuators.size(); i++) {
             if (!actuators.get(i).getDescription().toLowerCase().contains(description) ||
-                    !String.valueOf(actuators.get(i).getLocalId()).contains(localId) ||
+                    !String.valueOf(actuators.get(i).getSerraId()).contains(serraId) ||
                     !actuators.get(i).getManual().toLowerCase().contains(manual)) {
 
                 actuators.remove(i);
@@ -81,7 +82,7 @@ public class GestioneAttuatore {
     }
 
     public Attuatore getActuator(int id) {
-        final String sql = "SELECT id, descrizione, tipo, stato, manuale, locale_id FROM attuatori WHERE id = ?";
+        final String sql = "SELECT id, descrizione, tipo, stato, manuale, serra_id FROM attuatori WHERE id = ?";
 
         Attuatore actuator = null;
 
@@ -107,9 +108,9 @@ public class GestioneAttuatore {
         return actuator;
     }
 
-    public Attuatore getActuatorOfLocal(int localId, String type) {
+    public Attuatore getActuatorOfserra(int serraId, String type) {
         if(type.equals("temperatura") || type.equals("umidita")) type = "temperatura,umidita";
-        final String sql = "SELECT id, descrizione, tipo, stato, manuale, locale_id FROM attuatori WHERE locale_id = ? AND tipo = ?";
+        final String sql = "SELECT id, descrizione, tipo, stato, manuale, serra_id FROM attuatori WHERE serra_id = ? AND tipo = ?";
 
         Attuatore actuator = null;
 
@@ -121,7 +122,7 @@ public class GestioneAttuatore {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                actuator = new Attuatore(rs.getInt("id"), rs.getString("descrizione"), type, rs.getString("stato"), rs.getString("manuale"), localId);
+                actuator = new Attuatore(rs.getInt("id"), rs.getString("descrizione"), type, rs.getString("stato"), rs.getString("manuale"), serraId);
             }
 
             conn.close();
