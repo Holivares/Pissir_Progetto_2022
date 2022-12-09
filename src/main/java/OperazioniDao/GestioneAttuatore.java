@@ -42,8 +42,8 @@ public class GestioneAttuatore {
                     state = "Impostato su " + state + "°C";
                 } catch (NumberFormatException e) {}
 
-                Sensore sensore = sensoreDao.getSensorOfLocal(rs.getInt("serra_id"), rs.getString("tipo"));
-                Misura misura = misuraDao.getLastMeasureOfSensor(sensore);
+                Sensore sensore = sensoreDao.getSensoreOfSerra(rs.getInt("serra_id"), rs.getString("tipo"));
+                Misura misura = misuraDao.getUltimaMisuraSensore(sensore);
                 String misurazione = "";
                 try {
                     misurazione = misura.getMisurazioni();

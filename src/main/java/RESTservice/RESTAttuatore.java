@@ -32,7 +32,7 @@ public class RESTAttuatore {
             return allAttuatori;
         }, gson::toJson);
 
-        put(baseURL + "/actuators/updatemanual/:id", "application/json", (request, response) -> {
+        put(baseURL + "/actuatori/updatemanual/:id", "application/json", (request, response) -> {
             if(!Utils.getRuolo().equals("agricoltori")) halt(401);
             // Ottieni il corpo HTTP request
             Map addRequest = gson.fromJson(request.body(), Map.class);
@@ -51,7 +51,7 @@ public class RESTAttuatore {
             return attuatore;
         }, gson::toJson);
 
-        put(baseURL + "/actuators/updatestate/:id", "application/json", (request, response) -> {
+        put(baseURL + "/actuatori/updatestate/:id", "application/json", (request, response) -> {
             if(!Utils.getRuolo().equals("agricoltori")) halt(401);
             // Ottieni il corpo di HTTP request
             Map addRequest = gson.fromJson(request.body(), Map.class);

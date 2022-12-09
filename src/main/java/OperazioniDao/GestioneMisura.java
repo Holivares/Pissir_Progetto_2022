@@ -113,7 +113,7 @@ public class GestioneMisura {
         }
     }
 
-    public Misura getLastMeasureOfSensor(Sensore sensore){
+    public Misura getUltimaMisuraSensore(Sensore sensore){
         String sql = "";
         if(sensore.getTipo().equals("temperatura,umidita"))
             sql = "SELECT id, tipo, misurazione, data, sensore_id, serra_id FROM misure WHERE sensore_id = ? AND tipo = ? ORDER BY id DESC LIMIT 1";

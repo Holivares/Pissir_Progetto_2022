@@ -35,7 +35,7 @@ public class GestioneSensore {
 
             while (rs.next()) {
                 Sensore sensore = new Sensore(rs.getInt("id"), rs.getString("descrizione"), rs.getString("tipo"), rs.getInt("serra_id"));
-                Misura misura = misuraDao.getLastMeasureOfSensor(sensore);
+                Misura misura = misuraDao.getUltimaMisuraSensore(sensore);
                 String misurazione = "";
                 try {
                     misurazione = misura.getMisurazioni();
@@ -74,7 +74,7 @@ public class GestioneSensore {
         return sensori;
     }
 
-    public Sensore getSensorOfLocal(int serraId, String tipo)
+    public Sensore getSensoreOfSerra(int serraId, String tipo)
     {
         if(tipo.equals("temperatura") || tipo.equals("umidita")) tipo = "temperatura,umidita";
         Sensore sensore = null;

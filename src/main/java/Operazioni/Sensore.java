@@ -2,7 +2,7 @@ package Operazioni;
 
 public class Sensore {
     private int id;
-    private String description;
+    private String descrizione;
     private String tipo;
     private int serraId;
 
@@ -11,11 +11,11 @@ public class Sensore {
      * sensore main constructore.
      *
      * @param id  rappresenta l'id di un unico sensore
-     * @param description descrizione del sensore
+     * @param descirzione descrizione del sensore
      */
-    public Sensore(int id, String description, String tipo,  int serraId) {
+    public Sensore(int id, String descrizione, String tipo,  int serraId) {
         this.id = id;
-        this.description = description;
+        this.descrizione = descrizione;
         this.tipo = tipo;
         this.serraId = serraId;
     }
@@ -23,9 +23,9 @@ public class Sensore {
      * Overloaded constructor. Crea un programma d'irrigazione senza id dato.
      *
      */
-    public Sensore(String description, String tipo,  int serraId) {
+    public Sensore(String descrizione, String tipo,  int serraId) {
         this.id = 0;
-        this.description = description;
+        this.descrizione = descrizione;
         this.tipo = tipo;
         this.serraId = serraId;
 
@@ -34,8 +34,8 @@ public class Sensore {
     public int getId() {
         return id;
     }
-    public String getDescription() {
-        return description;
+    public String getDescrizione() {
+        return descrizione;
     }
     public String getTipo() {return tipo;}
     public int getSerraId() {

@@ -2,14 +2,14 @@ package Operazioni;
 
 public class Attuatore {
     private int id;
-    private String descripzione;
+    private String descrizione;
     private String stato;
     private String manual;
     private int serraId;
 
-    public Attuatore(int id, String descripzione, String stato, String manual, int serraId) {
+    public Attuatore(int id, String descrizione, String stato, String manual, int serraId) {
         this.id = id;
-        this.descripzione = descripzione;
+        this.descrizione = descrizione;
         this.stato = stato;
         this.manual = manual;
         this.serraId = serraId;
@@ -18,9 +18,9 @@ public class Attuatore {
     {
         return id;
     }
-    public String getDescription()
+    public String getDescrizione()
     {
-        return descripzione;
+        return descrizione;
     }
     public String getStato()
     {
