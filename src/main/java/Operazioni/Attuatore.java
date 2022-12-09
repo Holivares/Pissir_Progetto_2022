@@ -30,8 +30,5 @@ public class Attuatore {
     {
         return manual;
     }
-
-    public int getSerraId() {
-        return serraId;
-    }
+    public int getSerraId() { return serraId; }
 }

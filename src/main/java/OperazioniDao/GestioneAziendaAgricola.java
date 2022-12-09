@@ -4,7 +4,6 @@ package OperazioniDao;
 import Operazioni.AziendaAgricola;
 import Utils.DBConnect;
 import spark.QueryParamsMap;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

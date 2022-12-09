@@ -16,27 +16,27 @@ public class RESTAziendaAgricola {
 
         GestioneAziendaAgricola aziendaDao = new GestioneAziendaAgricola();
 
-        // get all the tasks
+        // Ottieni tutte le operazioni
         get(baseURL + "/aziende", (request, response) -> {
-            if(!Utils.getRole().equals("agricoltori")) halt(401);
-            // set a proper response code and type
+            if(!Utils.getRuolo().equals("agricoltori")) halt(401);
+            // impostare un codice e un tipo di risposta appropriati
             response.type("application/json");
             response.status(200);
 
-            // get all tasks from the DB
+            // Ottieni tutte le operazioni dal DB
             List<AziendaAgricola> allAziendeAgricole = aziendaDao.getAllAziendeAgricole(request.queryMap());
 
             return allAziendeAgricole;
         }, gson::toJson);
 
-        // get all the tasks
+        // Ottieni tutte le operazioni
         get(baseURL + "/serre", (request, response) -> {
-            if(!Utils.getRole().equals("collaboratoriri") && !Utils.getRole().equals("agricoltori")) halt(401);
-            // set a proper response code and type
+            if(!Utils.getRuolo().equals("collaboratoriri") && !Utils.getRuolo().equals("agricoltori")) halt(401);
+            // impostare un codice e un tipo di risposta appropriati
             response.type("application/json");
             response.status(200);
 
-            // get all tasks from the DB
+            //Ottieni tutte le operazioni dal DB
             List<AziendaAgricola> allAziendeAgricole = aziendaDao.getAllAziendeAgricole(request.queryMap());
 
             return allAziendeAgricole;

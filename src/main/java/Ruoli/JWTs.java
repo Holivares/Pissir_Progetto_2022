@@ -5,13 +5,12 @@ import java.util.Base64;
 
 public class JWTs {
     private static String token = "";
-    public static String getUserType() {
-        String userType = getPayload().split("\"roles\":")[1].split("]")[0];
+    public static String getUtenteTipo() {
+        String utenteTipo = getPayload().split("\"roles\":")[1].split("]")[0];
 
-        return userType;
+        return utenteTipo;
     }
-
-    public static String getUserId() {
+    public static String getUtenteId() {
         return getPayload().split("\"sub\":")[1].split(",\"typ\"")[0];
     }
     public static String getPayload() {

@@ -1,4 +1,5 @@
 package RESTservice;
+import Ruoli.Utils;
 import com.google.gson.Gson;
 import Operazioni.Utente;
 import OperazioniDao.GestioneUtente;
@@ -13,19 +14,19 @@ public class RESTUtente {
 
     public static void REST(Gson gson, String baseURL) {
 
-        GestioneUtente UserDao = new GestioneUtente();
+        GestioneUtente UtentiDao = new GestioneUtente();
 
-        // get all opazioni
-        get(baseURL + "/users", (request, response) -> {
-            if(!Utils.getRuolo().equals("Agri")) halt(401);
-            // set a proper response code and type
+        // Ottieni tutte le operazioni
+        get(baseURL + "/utenti", (request, response) -> {
+            if(!Utils.getRuolo().equals("agricoltori")) halt(401);
+            // impostare un codice e un tipo di risposta appropriati
             response.type("application/json");
             response.status(200);
 
-            // get all Operazione del DB
-            List<Utente> allUsers = UserDao.getAllUsers();
+            // Ottieni tutte le operazioni dal DB
+            List<Utente> allUtenti = UtentiDao.getAllUtente();
 
-            return allUsers;
+            return allUtenti;
         }, gson::toJson);
     }
 }

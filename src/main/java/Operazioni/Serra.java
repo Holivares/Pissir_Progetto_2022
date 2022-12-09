@@ -15,7 +15,7 @@ public class Serra {
 
     }
  /**
-     * Overloaded constructore. Crea una serra senza id dato.
+     * Overloaded constructore. Crea una serra senza un dato id.
      *
      */
     public Serra(String idAzienda, String descrizione, String tipoColtura)
@@ -24,7 +24,6 @@ public class Serra {
         this.descrizione = descrizione;
         this.tipoColtura = tipoColtura;
     }
-
 
     public int getId() {
         return id;
@@ -41,8 +40,6 @@ public class Serra {
     public String getTipo() {
         return tipoColtura;
     }
-
-
 
 }
 

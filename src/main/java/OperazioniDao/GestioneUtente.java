@@ -16,13 +16,13 @@ import java.util.List;
 public class GestioneUtente {
 
     /**
-     * Get all Users from the DB
-     * @return a list of User, or an empty list if no Users are available
+     * Ottieni tutti gli utenti DB
+     * @return una lista di utenti , o una lista vuota se non ci sono utenti
      */
-    public List<Utente> getAllUsers() {
+    public List<Utente> getAllUtente() {
         final String sql = "SELECT id, username, email, nome, cognome, ruolo FROM utenti";
 
-        List<Utente> users = new LinkedList<>();
+        List<Utente> utenti = new LinkedList<>();
 
         try {
             Connection conn = DBConnect.getInstance().getConnection();
@@ -32,8 +32,8 @@ public class GestioneUtente {
 
             while (rs.next()) {
 
-                Utente t = new Utente(rs.getString("id"), rs.getString("username"), rs.getString("email"), rs.getString("nome"), rs.getString("cognome"), rs.getString("ruolo"));
-                users.add(t);
+                Utente u = new Utente(rs.getString("id"), rs.getString("username"), rs.getString("email"), rs.getString("nome"), rs.getString("cognome"), rs.getString("ruolo"));
+                utenti.add(u);
             }
 
             conn.close();
@@ -41,6 +41,6 @@ public class GestioneUtente {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return users;
+        return utenti;
     }
 }

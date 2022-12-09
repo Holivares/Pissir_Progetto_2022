@@ -21,7 +21,7 @@ public class ProgrammaIrrig {
 
 
     /**
-    @param id rappresenta un singolo programma d'irrigazione
+    @param id rappresenta l'd di un singolo programma d'irrigazione
     */
 
     public ProgrammaIrrig(int id, String date, int oraInizio, int oraFine, int collaboratori, int aziendaAgricolaId , String serraId, String userId){

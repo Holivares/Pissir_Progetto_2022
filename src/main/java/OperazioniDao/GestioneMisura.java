@@ -19,8 +19,8 @@ public class GestioneMisura {
         List<Misura> misuri = new LinkedList<>();
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
 
             ResultSet rs = st.executeQuery();
 
@@ -41,7 +41,7 @@ public class GestioneMisura {
                 misuri.add(t);
             }
 
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -74,15 +74,15 @@ public class GestioneMisura {
     }
 
     /**
-     * Add a new task into the DB
-     * @param newMisura the Measure to be added
+     * Aggiungi una nuovo operazione nel DB
+     * @param nuovaMisura la misura da aggiungere
      */
     public void addMisura(Misura newMisura) {
-        final String sql = "INSERT INTO misure(tipo, misurazione, data, sensore_id, locale_id) VALUES (?,?,?,?,?)";
+        final String sql = "INSERT INTO misure(tipo, misurazione, data, sensore_id, serra_id) VALUES (?,?,?,?,?)";
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
             st.setString(1, newMisura.getTipo());
             st.setString(2, newMisura.getMisurazioni());
             st.setString(3, newMisura.getDateTime());
@@ -91,7 +91,7 @@ public class GestioneMisura {
 
             st.executeUpdate();
 
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -102,50 +102,35 @@ public class GestioneMisura {
         final String sql = "DELETE FROM misure WHERE id = ?";
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
             st.setInt(1, id);
             st.executeUpdate();
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void truncateTable(){
-        final String sql = "TRUNCATE TABLE misure";
-        try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
-
-            st.executeUpdate();
-
-            conn.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Misura getLastMeasureOfSensor(Sensore sensor){
+    public Misura getLastMeasureOfSensor(Sensore sensore){
         String sql = "";
-        if(sensor.getType().equals("temperatura,umidita"))
+        if(sensore.getTipo().equals("temperatura,umidita"))
             sql = "SELECT id, tipo, misurazione, data, sensore_id, serra_id FROM misure WHERE sensore_id = ? AND tipo = ? ORDER BY id DESC LIMIT 1";
         else
             sql = "SELECT id, tipo, misurazione, data, sensore_id, serra_id FROM misure WHERE sensore_id = ? ORDER BY id DESC LIMIT 1";
 
-        Misura measure = null;
+        Misura misura = null;
 
         try {
             Connection conn = DBConnect.getInstance().getConnection();
             PreparedStatement st = conn.prepareStatement(sql);
-            st.setInt(1, sensor.getId());
-            if(sensor.getType().equals("temperatura,umidita")) st.setString(2, "temperatura");
+            st.setInt(1, sensore.getId());
+            if(sensore.getTipo().equals("temperatura,umidita")) st.setString(2, "temperatura");
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                measure= new Misura(rs.getInt("id"), rs.getString("tipo"), rs.getString("misurazione"), rs.getString("data"), sensor.getId(), rs.getInt("serra_id"));
+                misura= new Misura(rs.getInt("id"), rs.getString("tipo"), rs.getString("misurazione"), rs.getString("data"), sensore.getId(), rs.getInt("serra_id"));
             }
 
             conn.close();
@@ -153,7 +138,22 @@ public class GestioneMisura {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return measure;
+        return misura;
+    }
+
+    public void truncateTable(){
+        final String sql = "TRUNCATE TABLE misure";
+        try {
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
+
+            st.executeUpdate();
+
+            co.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

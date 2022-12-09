@@ -16,9 +16,8 @@ public class Misura {
     private int serraId;
 
 
-
     /**
-     * @param id represents the reservation unique identifier
+     * @param id rappresenta l'identificativo unico del programma d'irrigazione
      */
     public Misura(int id, String tipo, String misurazioni, String dateTime, int sensoreId, int serraId) {
         this.id = id;
@@ -29,9 +28,8 @@ public class Misura {
         this.serraId = serraId;
     }
 
-
     /**
-     * Overloaded constructor. It create a reservation without a given id.
+     * Overloaded constructore.Crea un programma d'irrigazione senza un dato id.
      *
      */
     public Misura(String tipo, String misurazioni, String dateTime, int sensoreId, int serraId) {

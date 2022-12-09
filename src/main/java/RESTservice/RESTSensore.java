@@ -14,17 +14,17 @@ import static spark.Spark.halt;
 public class RESTSensore {
     public static void REST(Gson gson, String baseURL){
 
-        GestioneSensore sensorDao = new GestioneSensore();
+        GestioneSensore sensoreDao = new GestioneSensore();
 
-        // get all the tasks
-        get(baseURL + "/sensors", (request, response) -> {
-            if(!Utils.getRole().equals("agricoltori")) halt(401);
-            // set a proper response code and type
+        // Ottieni tutte le operazioni
+        get(baseURL + "/sensori", (request, response) -> {
+            if(!Utils.getRuolo().equals("agricoltori")) halt(401);
+            // impostare un codice e un tipo di risposta appropriati
             response.type("application/json");
             response.status(200);
 
-            // get all tasks from the DB
-            List<SensoreJs> allSensori = sensorDao.getAllSensors(request.queryMap());
+            // Ottieni tutte le operazioni  DB
+            List<SensoreJs> allSensori = sensoreDao.getAllSensori(request.queryMap());
 
             return allSensori;
         }, gson::toJson);

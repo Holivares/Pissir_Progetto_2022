@@ -16,58 +16,58 @@ public class RESTAttuatore {
 
     public static void REST(Gson gson, String baseURL){
 
-        GestioneAttuatore actuatorDao = new GestioneAttuatore();
+        GestioneAttuatore attuatoreDao = new GestioneAttuatore();
 
-        // get all the tasks
-        get(baseURL + "/actuators", (request, response) -> {
-            if(!Utils.getRole().equals("agricoltori")) halt(401);
+        // Ottieni tutte le operazioni
+        get(baseURL + "/attuatori", (request, response) -> {
+            if(!Utils.getRuolo().equals("agricoltori")) halt(401);
             // set a proper response code and type
             response.type("application/json");
             response.status(200);
 
-            // get all tasks from the DB
-            List<AttuaroreJs> allActuators = actuatorDao.getAllActuators(request.queryMap());
-            // prepare the JSON-related structure to return
+            // Ottieni tutte le operazioni dal DB
+            List<AttuaroreJs> allAttuatori = attuatoreDao.getAllAttuatori(request.queryMap());
+            // prepara il JSON relativo al return
 
-            return allActuators;
+            return allAttuatori;
         }, gson::toJson);
 
         put(baseURL + "/actuators/updatemanual/:id", "application/json", (request, response) -> {
-            if(!Utils.getRole().equals("agricoltori")) halt(401);
-            // get the body of the HTTP request
+            if(!Utils.getRuolo().equals("agricoltori")) halt(401);
+            // Ottieni il corpo HTTP request
             Map addRequest = gson.fromJson(request.body(), Map.class);
-            Attuatore actuator = null;
-            // check whether everything is in place
+            Attuatore attuatore = null;
+            // controlla che tutto sia apposto
             if(request.params(":id")!=null && addRequest!=null && addRequest.containsKey("manual") && String.valueOf(addRequest.get("manual")).length() != 0) {
                 String manual = String.valueOf(addRequest.get("manual"));
-                actuator = actuatorDao.updateActuator(manual, Integer.parseInt(String.valueOf(request.params(":id"))));
-                // if success, prepare a suitable HTTP response code
+                attuatore = attuatoreDao.updateAttuatore(manual, Integer.parseInt(String.valueOf(request.params(":id"))));
+                // se da successo, prepara  HTTP response code
                 response.status(201);
             }
             else {
                 halt(400);
             }
 
-            return actuator;
+            return attuatore;
         }, gson::toJson);
 
         put(baseURL + "/actuators/updatestate/:id", "application/json", (request, response) -> {
-            if(!Utils.getRole().equals("admin")) halt(401);
-            // get the body of the HTTP request
+            if(!Utils.getRuolo().equals("agricoltori")) halt(401);
+            // Ottieni il corpo di HTTP request
             Map addRequest = gson.fromJson(request.body(), Map.class);
-            Attuatore actuator = null;
-            // check whether everything is in place
-            if(request.params(":id")!=null && addRequest!=null && addRequest.containsKey("state")) {
-                String state = String.valueOf(addRequest.get("state"));
-                actuator = actuatorDao.updateState(state, Integer.parseInt(String.valueOf(request.params(":id"))));
-                // if success, prepare a suitable HTTP response code
+            Attuatore attuatore = null;
+            // controlla che tutto sia apposto
+            if(request.params(":id")!=null && addRequest!=null && addRequest.containsKey("stato")) {
+                String stato = String.valueOf(addRequest.get("stato"));
+                attuatore = attuatoreDao.updateStato(stato, Integer.parseInt(String.valueOf(request.params(":id"))));
+                // se da successo, prepara  HTTP response code
                 response.status(201);
             }
             else {
                 halt(400);
             }
 
-            return actuator;
+            return attuatore;
         }, gson::toJson);
     }
 }

@@ -14,21 +14,21 @@ import java.util.List;
 
 public class GestioneAttuatore {
 
-    GestioneSensore sensorDao = new GestioneSensore();
-    GestioneMisura measureDao = new GestioneMisura();
+    GestioneSensore sensoreDao = new GestioneSensore();
+    GestioneMisura misuraDao = new GestioneMisura();
     /**
-     * Get all Actuators from the DB
-     * @return a list of Actuator, or an empty list if no Actuators are available
+     * Ottieni tutte le misure dal DB
+     * @return una lista delle misure, o una lista vuotà se non c'è un sensore diponibile
      * @param queryParamsMap
      */
-    public List<AttuaroreJs> getAllActuators(QueryParamsMap queryParamsMap) {
-        final String sql = "SELECT id, descrizione, tipo, stato, manuale, locale_id FROM attuatori";
+    public List<AttuaroreJs> getAllAttuatori(QueryParamsMap queryParamsMap) {
+        final String sql = "SELECT id, descrizione, tipo, stato, manuale, serra_id FROM attuatori";
 
-        List<AttuaroreJs> actuators = new LinkedList<>();
+        List<AttuaroreJs> attuatori = new LinkedList<>();
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
 
             ResultSet rs = st.executeQuery();
 
@@ -42,57 +42,57 @@ public class GestioneAttuatore {
                     state = "Impostato su " + state + "°C";
                 } catch (NumberFormatException e) {}
 
-                Sensore sensor = sensorDao.getSensorOfLocal(rs.getInt("locale_id"), rs.getString("tipo"));
-                Misura measure = measureDao.getLastMeasureOfSensor(sensor);
-                String measurement = "";
+                Sensore sensore = sensoreDao.getSensorOfLocal(rs.getInt("serra_id"), rs.getString("tipo"));
+                Misura misura = misuraDao.getLastMeasureOfSensor(sensore);
+                String misurazione = "";
                 try {
-                    measurement = measure.getMisurazioni();
-                    if(measure.getTipo().equals("temperatura"))
-                        measurement += "°C";
-                    else measurement += "%";
+                    misurazione = misura.getMisurazioni();
+                    if(misura.getTipo().equals("temperatura"))
+                        misurazione += "°C";
+                    else misurazione += "%";
                 } catch(NullPointerException e) {}
 
-                AttuaroreJs t = new AttuaroreJs(rs.getInt("id"), rs.getString("descrizione"), rs.getString("tipo"), state, rs.getString("manuale"), measurement, rs.getInt("locale_id"));
-                actuators.add(t);
+                AttuaroreJs t = new AttuaroreJs(rs.getInt("id"), rs.getString("descrizione"), rs.getString("tipo"), state, rs.getString("manuale"), misurazione, rs.getInt("serra_id"));
+                attuatori.add(t);
             }
 
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return where(queryParamsMap, actuators);
+        return where(queryParamsMap, attuatori);
     }
 
-    private List<AttuaroreJs> where(QueryParamsMap queryParamsMap, List<AttuaroreJs> actuators){
-        String description = "";
+    private List<AttuaroreJs> where(QueryParamsMap queryParamsMap, List<AttuaroreJs> attuatori){
+        String descrizione = "";
         String manual = "";
         String serraId = "";
-        if(queryParamsMap.hasKey("description")) description = queryParamsMap.get("description").value().toLowerCase();
+        if(queryParamsMap.hasKey("descrizione")) descrizione = queryParamsMap.get("descrizione").value().toLowerCase();
         if(queryParamsMap.hasKey("manual")) manual = queryParamsMap.get("manual").value().toLowerCase();
         if(queryParamsMap.hasKey("serraId")) serraId = queryParamsMap.get("serraId").value().toLowerCase();
 
-        for(int i = 0; i<actuators.size(); i++) {
-            if (!actuators.get(i).getDescription().toLowerCase().contains(description) ||
-                    !String.valueOf(actuators.get(i).getSerraId()).contains(serraId) ||
-                    !actuators.get(i).getManual().toLowerCase().contains(manual)) {
+        for(int i = 0; i<attuatori.size(); i++) {
+            if (!attuatori.get(i).getDescrizione().toLowerCase().contains(descrizione) ||
+                    !String.valueOf(attuatori.get(i).getSerraId()).contains(serraId) ||
+                    !attuatori.get(i).getManual().toLowerCase().contains(manual)) {
 
-                actuators.remove(i);
+                attuatori.remove(i);
                 i--;
             }
         }
 
-        return actuators;
+        return attuatori;
     }
 
-    public Attuatore getActuator(int id) {
+    public Attuatore getAttuatore(int id) {
         final String sql = "SELECT id, descrizione, tipo, stato, manuale, serra_id FROM attuatori WHERE id = ?";
 
-        Attuatore actuator = null;
+        Attuatore attuatore = null;
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
             st.setInt(1, id);
             ResultSet rs = st.executeQuery();
 
@@ -101,81 +101,81 @@ public class GestioneAttuatore {
                 String stato = rs.getString("stato");
                 if(stato.equals("off")) stato = "Spento.";
                 else if(stato.equals("on")) stato = "Acceso.";
-                actuator = new Attuatore(id, rs.getString("descrizione"), stato, rs.getString("manuale"), rs.getInt("serra_id"));
+                attuatore = new Attuatore(id, rs.getString("descrizione"), stato, rs.getString("manuale"), rs.getInt("serra_id"));
             }
 
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return actuator;
+        return attuatore;
     }
 
     public Attuatore getActuatorOfLocal(int serraId, String tipo) {
         if(tipo.equals("temperatura") || tipo.equals("umidita")) tipo = "temperatura,umidita";
-        final String sql = "SELECT id, descrizione, tipo, stato, manuale, locale_id FROM attuatori WHERE serra_id = ? AND tipo = ?";
+        final String sql = "SELECT id, descrizione, tipo, stato, manuale, serra_id FROM attuatori WHERE serra_id = ? AND tipo = ?";
 
-        Attuatore actuator = null;
+        Attuatore attuatore = null;
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
             st.setInt(1, serraId);
             st.setString(2, tipo);
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                actuator = new Attuatore(rs.getInt("id"), rs.getString("descrizione"),rs.getString("stato"), rs.getString("manuale"), serraId);
+                attuatore = new Attuatore(rs.getInt("id"), rs.getString("descrizione"),rs.getString("stato"), rs.getString("manuale"), serraId);
             }
 
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return actuator;
+        return attuatore;
     }
 
-    public Attuatore updateActuator(String manual, int id) {
+    public Attuatore updateAttuatore(String manual, int id) {
         final String sql = "UPDATE attuatori SET manuale = ?, stato = 'off' WHERE id = ?";
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
             st.setString(1, manual);
             st.setInt(2, id);
 
             st.executeUpdate();
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        Attuatore actuator = getActuator(id);
+        Attuatore attuatore = getAttuatore(id);
 
-        return actuator;
+        return attuatore;
     }
 
-    public Attuatore updateState(String state, int id) {
+    public Attuatore updateStato(String stato, int id) {
         final String sql = "UPDATE attuatori SET stato = ? WHERE id = ?";
 
         try {
-            Connection conn = DBConnect.getInstance().getConnection();
-            PreparedStatement st = conn.prepareStatement(sql);
-            st.setString(1, state);
+            Connection co = DBConnect.getInstance().getConnection();
+            PreparedStatement st = co.prepareStatement(sql);
+            st.setString(1, stato);
             st.setInt(2, id);
 
             st.executeUpdate();
-            conn.close();
+            co.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        Attuatore actuator = getActuator(id);
+        Attuatore attuatore = getAttuatore(id);
 
-        return actuator;
+        return attuatore;
     }
 }

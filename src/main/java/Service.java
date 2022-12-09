@@ -1,4 +1,4 @@
-import RESTservice.RESTProgrammaIrrig;
+import RESTservice.*;
 import com.google.gson.Gson;
 import static spark.Spark.*;
 
@@ -35,14 +35,14 @@ public class Service {
             response.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
         });
 
-          RESTProgrammaIrrig.REST(gson,baseURL);
-//        RESTAziendaAgricola.REST(gson, baseURL);
-//        RESTAttuatore.REST(gson, baseURL);
-//        RESTSensore.REST(gson, baseURL);
-//        RESTMisura.REST(gson, baseURL);
-//        RESTUtente.REST(gson, baseURL);
-//
-//
+        RESTProgrammaIrrig.REST(gson,baseURL);
+        RESTAziendaAgricola.REST(gson, baseURL);
+        RESTAttuatore.REST(gson, baseURL);
+        RESTSensore.REST(gson, baseURL);
+        RESTMisura.REST(gson, baseURL);
+        RESTUtente.REST(gson, baseURL);
+
+
 //        GestioneMisureLocaliMQTT gestioneMisureLocaliMQTT = new GestioneMisureLocaliMQTT();
 //        gestioneMisureLocaliMQTT.MQTTInit();
     }

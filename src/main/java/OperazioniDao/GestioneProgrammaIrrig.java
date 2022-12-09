@@ -19,7 +19,7 @@ public class GestioneProgrammaIrrig {
     public List<ProgrammaIrrig> getAllProgrammaIrrig(QueryParamsMap queryParamsMap) {
         final String sql = "SELECT id, data_p , ora_inizio, ora_fine, collaboratori, azienda_agri_id, serra_id, utente_id FROM programmi";
 
-        List<ProgrammaIrrig> programms = new LinkedList<>();
+        List<ProgrammaIrrig> programmi = new LinkedList<>();
 
         try {
             Connection co = DBConnect.getInstance().getConnection();
@@ -35,9 +35,9 @@ public class GestioneProgrammaIrrig {
                 else if(vecchia.getOraFine() == rs.getInt("ora_fine") && vecchia.getDate().equals(rs.getString("data_p")) && vecchia.getAziendaAgricolaId() == rs.getInt("azienda_agri_id") && vecchia.getSerraId() == rs.getString("serra_id"))
                     vecchia = new ProgrammaIrrig(vecchia.getId(), vecchia.getDate(), vecchia.getOraInizio(), rs.getInt("ora_fine"), vecchia.getCollaboratori(), vecchia.getAziendaAgricolaId(), vecchia.getSerraId(),vecchia.getUserId());
                 else {
-                    programms.add(vecchia);
+                    programmi.add(vecchia);
                     ProgrammaIrrig p = new ProgrammaIrrig(rs.getInt("id"), rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"),rs.getInt("collaboratori"), rs.getInt("serra_id"), rs.getString("azienda_agri_id"),rs.getString("utente_id"));
-                    programms.add(p);
+                    programmi.add(p);
                 }
             }
 
@@ -46,13 +46,13 @@ public class GestioneProgrammaIrrig {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return where(queryParamsMap, programms);
+        return where(queryParamsMap, programmi);
     }
 
     public List<ProgrammaIrrig> getAllProgrammaIrrigAzienda(int aziendaAgricolaId) {
         final String sql = "SELECT id, data_p, ora_inizio, ora_fine, collaboratori, azienda_agri_id, serra_id, utente_id FROM programmi WHERE azienda_agri_id = ?";
 
-        List<ProgrammaIrrig> programms = new LinkedList<>();
+        List<ProgrammaIrrig> programmi = new LinkedList<>();
 
         try {
             Connection co = DBConnect.getInstance().getConnection();
@@ -65,7 +65,7 @@ public class GestioneProgrammaIrrig {
                 String serraId = rs.getString("serra_id");
                 String userId = rs.getString("utente_id");
                 ProgrammaIrrig p = new ProgrammaIrrig(rs.getInt("id"), rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"),rs.getInt("collaboratori"), aziendaAgricolaId, serraId,userId);
-                programms.add(p);
+                programmi.add(p);
             }
 
             co.close();
@@ -73,13 +73,13 @@ public class GestioneProgrammaIrrig {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return programms;
+        return programmi;
     }
 
     public List<ProgrammaIrrig> getAllProgrammaIrrigUser(String userId, QueryParamsMap queryParamsMap) {
         final String sql = "SELECT id, data_p, ora_inizio, ora_fine, collaboratori, azienda_agri_id, serra_id, utente_id FROM programmi WHERE utente_id = ?";
 
-        List<ProgrammaIrrig> programms = new LinkedList<>();
+        List<ProgrammaIrrig> programmi = new LinkedList<>();
 
         try {
             Connection co = DBConnect.getInstance().getConnection();
@@ -90,7 +90,7 @@ public class GestioneProgrammaIrrig {
 
             while(rs.next()) {
                 ProgrammaIrrig p = new ProgrammaIrrig(rs.getInt("id"), rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"), rs.getInt("collaboratori"),rs.getInt("azienda_agri_id"),rs.getString("serra_id"),rs.getString("utente_id"));
-                programms.add(p);
+                programmi.add(p);
             }
 
             co.close();
@@ -99,10 +99,10 @@ public class GestioneProgrammaIrrig {
             e.printStackTrace();
         }
 
-        return where(queryParamsMap, programms);
+        return where(queryParamsMap, programmi);
     }
 
-    private List<ProgrammaIrrig> where(QueryParamsMap queryParamsMap, List<ProgrammaIrrig> programs){
+    private List<ProgrammaIrrig> where(QueryParamsMap queryParamsMap, List<ProgrammaIrrig> programmi){
         String date = "";
         String oraInizio = "";
         String oraFine = "";
@@ -120,20 +120,20 @@ public class GestioneProgrammaIrrig {
 
 
 
-        for(int i = 0; i<programs.size(); i++){
-            if (!programs.get(i).getDate().toLowerCase().contains(date) || !String.valueOf(programs.get(i).getOraInizio()).contains(oraInizio) || !String.valueOf(programs.get(i).getOraFine()).contains(oraFine) || !String.valueOf(programs.get(i).getCollaboratori()).contains(collaboratori)|| !String.valueOf(programs.get(i).getAziendaAgricolaId()).contains(aziendaAgricolaId) || !String.valueOf(programs.get(i).getSerraId()).contains(serraId)|| !String.valueOf(programs.get(i).getUserId()).contains(userId)) {
-                programs.remove(i);
+        for(int i = 0; i<programmi.size(); i++){
+            if (!programmi.get(i).getDate().toLowerCase().contains(date) || !String.valueOf(programmi.get(i).getOraInizio()).contains(oraInizio) || !String.valueOf(programmi.get(i).getOraFine()).contains(oraFine) || !String.valueOf(programmi.get(i).getCollaboratori()).contains(collaboratori)|| !String.valueOf(programmi.get(i).getAziendaAgricolaId()).contains(aziendaAgricolaId) || !String.valueOf(programmi.get(i).getSerraId()).contains(serraId)|| !String.valueOf(programmi.get(i).getUserId()).contains(userId)) {
+                programmi.remove(i);
                 i--;
             }
         }
 
-        return programs;
+        return programmi;
     }
 
     public List<ProgrammaIrrig> getAllProgrammaIrrigSerra(int serraId) {
         final String sql = "SELECT id, data_p, ora_inizio, ora_fine,collaboratori, azienda_agri_id, serra_id, utente_id FROM programmi WHERE serra_id = ?";
 
-        List<ProgrammaIrrig> programms = new LinkedList<>();
+        List<ProgrammaIrrig> programmi = new LinkedList<>();
 
         try {
             Connection co = DBConnect.getInstance().getConnection();
@@ -146,7 +146,7 @@ public class GestioneProgrammaIrrig {
                 String aziendaAgricolaId = rs.getString("azienda_agri_id");
                 String userId = rs.getString("utente_id");
                 ProgrammaIrrig p = new ProgrammaIrrig(rs.getInt("id"), rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("collaboratori"),rs.getInt("ora_fine"), serraId, aziendaAgricolaId, userId);
-                programms.add(p);
+                programmi.add(p);
             }
 
             co.close();
@@ -154,13 +154,13 @@ public class GestioneProgrammaIrrig {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return programms;
+        return programmi;
     }
 
     public ProgrammaIrrig getProgrammaIrrig(int id) {
         final String sql = "SELECT id, data_p, ora_inizio, ora_fine,collaboratori, serra_id, azienda_agri_id, utente_id FROM programmi WHERE id = ?";
 
-        ProgrammaIrrig programms = null;
+        ProgrammaIrrig programmi = null;
 
         try {
             Connection co = DBConnect.getInstance().getConnection();
@@ -169,7 +169,7 @@ public class GestioneProgrammaIrrig {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                programms = new ProgrammaIrrig(id, rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"),rs.getInt("collaboratori"), rs.getInt("serra_id"),rs.getString("azienda_agri_id"), rs.getString("utente_id"));
+                programmi = new ProgrammaIrrig(id, rs.getString("data_p"), rs.getInt("ora_inizio"), rs.getInt("ora_fine"),rs.getInt("collaboratori"), rs.getInt("serra_id"),rs.getString("azienda_agri_id"), rs.getString("utente_id"));
             }
 
             co.close();
@@ -177,7 +177,7 @@ public class GestioneProgrammaIrrig {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return programms;
+        return programmi;
     }
 
 
@@ -224,9 +224,9 @@ public class GestioneProgrammaIrrig {
             e.printStackTrace();
         }
 
-        ProgrammaIrrig programms = getProgrammaIrrig(id);
+        ProgrammaIrrig programmi = getProgrammaIrrig(id);
 
-        return programms;
+        return programmi;
     }
 
     public void deleteProgrammaIrrig(int id) {
