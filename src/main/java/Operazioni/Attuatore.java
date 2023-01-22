@@ -5,14 +5,14 @@ public class Attuatore {
     private String descrizione;
     private String stato;
     private String manual;
-    private int serraId;
+    private int aziendaAgricolaId;
 
-    public Attuatore(int id, String descrizione, String stato, String manual, int serraId) {
+    public Attuatore(int id, String descrizione, String stato, String manual, int aziendaAgricolaId) {
         this.id = id;
         this.descrizione = descrizione;
         this.stato = stato;
         this.manual = manual;
-        this.serraId = serraId;
+        this.aziendaAgricolaId = aziendaAgricolaId;
     }
     public int getId()
     {
@@ -30,5 +30,5 @@ public class Attuatore {
     {
         return manual;
     }
-    public int getSerraId() { return serraId; }
+    public int getAziendaAgricolaId() { return aziendaAgricolaId; }
 }

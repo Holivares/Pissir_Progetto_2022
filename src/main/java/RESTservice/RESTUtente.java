@@ -1,8 +1,8 @@
 package RESTservice;
-import Ruoli.Utils;
 import com.google.gson.Gson;
 import Operazioni.Utente;
 import OperazioniDao.GestioneUtente;
+import jwtToken.Utils;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class RESTUtente {
 
         // Ottieni tutte le operazioni
         get(baseURL + "/utenti", (request, response) -> {
-            if(!Utils.getRuolo().equals("agricoltori")) halt(401);
+            if(!Utils.getRole().equals("agricoltori")) halt(401);
             // impostare un codice e un tipo di risposta appropriati
             response.type("application/json");
             response.status(200);

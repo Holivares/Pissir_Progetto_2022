@@ -14,7 +14,7 @@ import java.util.List;
 public class GestioneAziendaAgricola {
 
     public List<AziendaAgricola> getAllAziendeAgricole(QueryParamsMap queryParamsMap) {
-        final String sql = "SELECT id, nome FROM aziende";
+        final String sql = "SELECT id, descizione,tipo FROM aziende";
 
         List<AziendaAgricola> aziende = new LinkedList<>();
 
@@ -25,7 +25,7 @@ public class GestioneAziendaAgricola {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                AziendaAgricola t = new AziendaAgricola(rs.getInt("id"), rs.getString("nome"));
+                AziendaAgricola t = new AziendaAgricola(rs.getInt("id"), rs.getString("descrizione"),rs.getString("tipo"));
                 aziende.add(t);
             }
 
@@ -42,7 +42,7 @@ public class GestioneAziendaAgricola {
      * @param queryParamsMap
      */
     public List<AziendaAgricola> getAllSerre(QueryParamsMap queryParamsMap) {
-        final String sql = "SELECT id, nome FROM aziende" ;
+        final String sql = "SELECT id, descrizione,tipo FROM aziende" ;
 
         List<AziendaAgricola> aziende = new LinkedList<>();
 
@@ -54,7 +54,7 @@ public class GestioneAziendaAgricola {
 
             while (rs.next()) {
 
-                AziendaAgricola a = new AziendaAgricola(rs.getInt("id"), rs.getString("nome"));
+                AziendaAgricola a = new AziendaAgricola(rs.getInt("id"), rs.getString("descrizione"),rs.getString("tipo"));
                 aziende.add(a);
             }
 
@@ -67,12 +67,15 @@ public class GestioneAziendaAgricola {
     }
 
     private List<AziendaAgricola> where(QueryParamsMap queryParamsMap, List<AziendaAgricola> aziende){
-        String nome = "";
+        String descrizione = "";
+        String tipo ="";
 
-        if(queryParamsMap.hasKey("nome")) nome= queryParamsMap.get("nome").value().toLowerCase();
+
+        if(queryParamsMap.hasKey("descizione")) descrizione= queryParamsMap.get("descrizione").value().toLowerCase();
+        if(queryParamsMap.hasKey("tipo")) descrizione= queryParamsMap.get("tipo").value().toLowerCase();
 
         for(int i = 0; i<aziende.size(); i++) {
-            if (!aziende.get(i).getNome().toLowerCase().contains(nome)) {
+            if (!aziende.get(i).getDescrizione().toLowerCase().contains(descrizione)  || !aziende.get(i).getTipo().toLowerCase().contains(tipo)) {
 
                 aziende.remove(i);
                 i--;
@@ -83,7 +86,7 @@ public class GestioneAziendaAgricola {
     }
 
     public AziendaAgricola getAziendaAgricola(int id) {
-        final String sql = "SELECT id, nome FROM aziende WHERE id = ?";
+        final String sql = "SELECT id, descrizione, tipo FROM aziende WHERE id = ?";
 
         AziendaAgricola azienda = null;
 
@@ -94,7 +97,7 @@ public class GestioneAziendaAgricola {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                azienda = new AziendaAgricola(rs.getInt("id"), rs.getString("nome"));
+                azienda = new AziendaAgricola(rs.getInt("id"), rs.getString("descrizione"),rs.getString("tipo"));
             }
 
             co.close();

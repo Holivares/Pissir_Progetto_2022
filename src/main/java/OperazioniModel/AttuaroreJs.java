@@ -9,21 +9,21 @@ public class AttuaroreJs {
     private String stato;
     private String manual;
     private String ultimaMisura;
-    private int serraId;
+    private int aziendaAgricolaId;
 
 
     /**
      * serra main constructor.
      *
      */
-    public AttuaroreJs(int id, String descrizione, String tipo, String stato, String manual, String  ultimaMisura, int serraId) {
+    public AttuaroreJs(int id, String descrizione, String tipo, String stato, String manual, String  ultimaMisura, int aziendaAgricolaId) {
         this.id = id;
         this.descrizione = descrizione;
         this.tipo = tipo;
         this.stato = stato;
         this.manual = manual;
         this.ultimaMisura = ultimaMisura;
-        this.serraId = serraId;
+        this.aziendaAgricolaId = aziendaAgricolaId;
     }
     public int getId() { return id; }
     public String getDescrizione() {
@@ -34,10 +34,10 @@ public class AttuaroreJs {
     }
     public String getStato() { return stato; }
     public String getManual() { return manual; }
-    public String getUltimaMisura() {
-        return ultimaMisura;
-    }
-    public int getSerraId() {
-        return serraId;
+
+    public String getUltimaMisura() { return ultimaMisura; }
+
+    public int getAziendaAgricolaId() {
+        return aziendaAgricolaId;
     }
 }

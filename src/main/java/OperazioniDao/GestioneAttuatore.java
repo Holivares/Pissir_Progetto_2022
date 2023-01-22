@@ -22,7 +22,7 @@ public class GestioneAttuatore {
      * @param queryParamsMap
      */
     public List<AttuaroreJs> getAllAttuatori(QueryParamsMap queryParamsMap) {
-        final String sql = "SELECT id, descrizione, tipo, stato, manuale, serra_id FROM attuatori";
+        final String sql = "SELECT id, descrizione, tipo, stato, manuale, azienda_agri_id FROM attuatori";
 
         List<AttuaroreJs> attuatori = new LinkedList<>();
 
@@ -42,7 +42,7 @@ public class GestioneAttuatore {
                     state = "Impostato su " + state + "°C";
                 } catch (NumberFormatException e) {}
 
-                Sensore sensore = sensoreDao.getSensoreOfSerra(rs.getInt("serra_id"), rs.getString("tipo"));
+                Sensore sensore = sensoreDao.getSensoreOfAziende(rs.getInt("azienda_agri_id"), rs.getString("tipo"));
                 Misura misura = misuraDao.getUltimaMisuraSensore(sensore);
                 String misurazione = "";
                 try {
@@ -52,7 +52,7 @@ public class GestioneAttuatore {
                     else misurazione += "%";
                 } catch(NullPointerException e) {}
 
-                AttuaroreJs t = new AttuaroreJs(rs.getInt("id"), rs.getString("descrizione"), rs.getString("tipo"), state, rs.getString("manuale"), misurazione, rs.getInt("serra_id"));
+                AttuaroreJs t = new AttuaroreJs(rs.getInt("id"), rs.getString("descrizione"), rs.getString("tipo"), state, rs.getString("manuale"), misurazione, rs.getInt("azienda_agri_id"));
                 attuatori.add(t);
             }
 
@@ -67,14 +67,14 @@ public class GestioneAttuatore {
     private List<AttuaroreJs> where(QueryParamsMap queryParamsMap, List<AttuaroreJs> attuatori){
         String descrizione = "";
         String manual = "";
-        String serraId = "";
+        String aziendaAgricolaId = "";
         if(queryParamsMap.hasKey("descrizione")) descrizione = queryParamsMap.get("descrizione").value().toLowerCase();
         if(queryParamsMap.hasKey("manual")) manual = queryParamsMap.get("manual").value().toLowerCase();
-        if(queryParamsMap.hasKey("serraId")) serraId = queryParamsMap.get("serraId").value().toLowerCase();
+        if(queryParamsMap.hasKey("aziendaAgricolaId")) aziendaAgricolaId = queryParamsMap.get("aziendaAgricolaId").value().toLowerCase();
 
         for(int i = 0; i<attuatori.size(); i++) {
             if (!attuatori.get(i).getDescrizione().toLowerCase().contains(descrizione) ||
-                    !String.valueOf(attuatori.get(i).getSerraId()).contains(serraId) ||
+                    !String.valueOf(attuatori.get(i).getAziendaAgricolaId()).contains(aziendaAgricolaId) ||
                     !attuatori.get(i).getManual().toLowerCase().contains(manual)) {
 
                 attuatori.remove(i);
@@ -86,7 +86,7 @@ public class GestioneAttuatore {
     }
 
     public Attuatore getAttuatore(int id) {
-        final String sql = "SELECT id, descrizione, tipo, stato, manuale, serra_id FROM attuatori WHERE id = ?";
+        final String sql = "SELECT id, descrizione, tipo, stato, manuale, azienda_agri_id FROM attuatori WHERE id = ?";
 
         Attuatore attuatore = null;
 
@@ -101,7 +101,7 @@ public class GestioneAttuatore {
                 String stato = rs.getString("stato");
                 if(stato.equals("off")) stato = "Spento.";
                 else if(stato.equals("on")) stato = "Acceso.";
-                attuatore = new Attuatore(id, rs.getString("descrizione"), stato, rs.getString("manuale"), rs.getInt("serra_id"));
+                attuatore = new Attuatore(id, rs.getString("descrizione"), stato, rs.getString("manuale"), rs.getInt("azienda_agri_id"));
             }
 
             co.close();
@@ -112,21 +112,21 @@ public class GestioneAttuatore {
         return attuatore;
     }
 
-    public Attuatore getActuatorOfLocal(int serraId, String tipo) {
-        if(tipo.equals("temperatura") || tipo.equals("umidita")) tipo = "temperatura,umidita";
-        final String sql = "SELECT id, descrizione, tipo, stato, manuale, serra_id FROM attuatori WHERE serra_id = ? AND tipo = ?";
+    public Attuatore getAttuatoreOfLocal(int aziendaAgricolaId, String tipo) {
+        if(tipo.equals("luminosità") ||tipo.equals("temperatura") || tipo.equals("umidita")) tipo = "luminosita,temperatura,umidita";
+        final String sql = "SELECT id, descrizione, tipo, stato, manuale, azienda_agri_id FROM attuatori WHERE azienda_agri_id = ? AND tipo = ?";
 
         Attuatore attuatore = null;
 
         try {
             Connection co = DBConnect.getInstance().getConnection();
             PreparedStatement st = co.prepareStatement(sql);
-            st.setInt(1, serraId);
+            st.setInt(1, aziendaAgricolaId);
             st.setString(2, tipo);
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
-                attuatore = new Attuatore(rs.getInt("id"), rs.getString("descrizione"),rs.getString("stato"), rs.getString("manuale"), serraId);
+                attuatore = new Attuatore(rs.getInt("id"), rs.getString("descrizione"),rs.getString("stato"), rs.getString("manuale"), aziendaAgricolaId);
             }
 
             co.close();

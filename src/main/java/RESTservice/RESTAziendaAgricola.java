@@ -2,8 +2,8 @@ package RESTservice;
 
 import Operazioni.AziendaAgricola;
 import OperazioniDao.GestioneAziendaAgricola;
-import Ruoli.Utils;
 import com.google.gson.Gson;
+import jwtToken.Utils;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class RESTAziendaAgricola {
 
         // Ottieni tutte le operazioni
         get(baseURL + "/aziende", (request, response) -> {
-            if(!Utils.getRuolo().equals("agricoltori")) halt(401);
+            if(!Utils.getRole().equals("agricoltori")) halt(401);
             // impostare un codice e un tipo di risposta appropriati
             response.type("application/json");
             response.status(200);
@@ -31,7 +31,7 @@ public class RESTAziendaAgricola {
 
         // Ottieni tutte le operazioni
         get(baseURL + "/serre", (request, response) -> {
-            if(!Utils.getRuolo().equals("collaboratoriri") && !Utils.getRuolo().equals("agricoltori")) halt(401);
+            if(!Utils.getRole().equals("collaboratori") && !Utils.getRole().equals("agricoltori")) halt(401);
             // impostare un codice e un tipo di risposta appropriati
             response.type("application/json");
             response.status(200);

@@ -17,9 +17,17 @@ repositories {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+    implementation "org.slf4j:slf4j-simple:1.7.26"
     implementation "com.sparkjava:spark-core:2.9.4"
-    implementation 'com.google.api-client:google-api-client:2.0.1'
-    implementation 'com.auth0:java-jwt:4.2.1'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation "com.sparkjava:spark-template-handlebars:2.7.1"
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
+    implementation 'com.auth0:java-jwt:3.10.3'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    implementation group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
+
 }
 
 test {

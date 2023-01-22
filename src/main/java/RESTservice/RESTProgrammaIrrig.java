@@ -1,9 +1,10 @@
 package RESTservice;
 
 import Operazioni.ProgrammaIrrig;
+import Operazioni.Serra;
 import OperazioniDao.GestioneProgrammaIrrig;
-import Ruoli.Utils;
 import com.google.gson.Gson;
+import jwtToken.Utils;
 import spark.QueryParamsMap;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -17,19 +18,19 @@ public class RESTProgrammaIrrig {
         GestioneProgrammaIrrig programmaIrrigDao = new GestioneProgrammaIrrig();
 
         // Ottieni tutte le operazioni
-        get(baseURL + "/programmairrig", (request, response) -> {
+        get(baseURL + "/piani_irrigazione", (request, response) -> {
             // impostare un codice e un tipo di risposta appropriati
             response.type("application/json");
             response.status(200);
 
-            String userId = Utils.getUtenteId();
+            String utenteId = Utils.getUserId();
 
             List<ProgrammaIrrig> allProgrammiIrigg = new LinkedList<>();
 
-            if (Utils.getRuolo().equals("agricoltori"))
+            if (Utils.getRole().equals("agricoltori"))
                 allProgrammiIrigg = programmaIrrigDao.getAllProgrammaIrrig(request.queryMap());
-            else if (Utils.getRuolo().equals("collaboratori"))
-                allProgrammiIrigg = programmaIrrigDao.getAllProgrammaIrrigUser(userId, request.queryMap());
+            else if (Utils.getRole().equals("utente"))
+                allProgrammiIrigg = programmaIrrigDao.getAllProgrammaIrrigUser(utenteId, request.queryMap());
             else
                 halt(401);
 
@@ -37,10 +38,10 @@ public class RESTProgrammaIrrig {
 
         }, gson::toJson);
 
-        delete(baseURL + "/programmairrig/:id", "application/json", (request, response) -> {
-            if (Utils.getRuolo().equals("agricoltori")) {
-            } else if (Utils.getRuolo().equals("collaboratori")) {
-                if (!programmaIrrigDao.getProgrammaIrrig(Integer.valueOf(request.params(":id"))).getUserId().equals(Utils.getUtenteId()))
+        delete(baseURL + "/piani_irrigazione/:id", "application/json", (request, response) -> {
+            if (Utils.getRole().equals("agricoltori")) {
+            } else if (Utils.getRole().equals("utente")) {
+                if (!programmaIrrigDao.getProgrammaIrrig(Integer.valueOf(request.params(":id"))).getUtenteId().equals(Utils.getUserId()))
                     halt(401);
             } else halt(401);
 
@@ -54,10 +55,10 @@ public class RESTProgrammaIrrig {
             return "";
         });
 
-        put(baseURL + "/programmairrig/updateagricoltori/:id", "application/json", (request, response) -> {
-            if (Utils.getRuolo().equals("agricoltori")) {
-            } else if (Utils.getRuolo().equals("collaboratori") || Utils.getRuolo().equals("agricoltori")) {
-                if (!programmaIrrigDao.getProgrammaIrrig(Integer.valueOf(request.params(":id"))).getUserId().equals(Utils.getUtenteId()))
+        put(baseURL + "/piani_irrigazione/:id", "application/json", (request, response) -> {
+            if (Utils.getRole().equals("agricoltori")) {
+            } else if (Utils.getRole().equals("agricoltori") || Utils.getRole().equals("agricoltori")) {
+                if (!programmaIrrigDao.getProgrammaIrrig(Integer.valueOf(request.params(":id"))).getUtenteId().equals(Utils.getUserId()))
                     halt(401);
             } else halt(401);
 
@@ -65,12 +66,9 @@ public class RESTProgrammaIrrig {
             Map addRequest = gson.fromJson(request.body(), Map.class);
             ProgrammaIrrig programmairrig = null;
             // controlla che tutto sia apposto
-            if (request.params(":id") != null && addRequest != null && addRequest.containsKey("agricoltori") && String.valueOf(addRequest.get("agricoltori")).length() != 0) {
-                int agricoltori = (int) Math.round((Double) addRequest.get("agricoltori"));
-                if (agricoltori > 5 || agricoltori < 1)
-                    halt(400);
-
-                programmairrig = programmaIrrigDao.updateProgrammaIrrig(agricoltori, Integer.parseInt(String.valueOf(request.params(":id"))));
+            if (request.params(":id") != null && addRequest != null && addRequest.containsKey("agricoltori")) {
+                String agricoltori = String.valueOf(addRequest.get("agricoltori"));
+                programmairrig = programmaIrrigDao.updateProgrammaIrrig(Integer.parseInt(agricoltori), Integer.parseInt(String.valueOf(request.params(":id"))));
                 // se successo, prepara un codice di risposta HTTP
                 response.status(201);
             } else {
@@ -80,5 +78,36 @@ public class RESTProgrammaIrrig {
             return programmairrig;
         }, gson::toJson);
 
+        post(baseURL + "/serraId", "application/json", (request, response) -> {
+            if (Utils.getRole().equals("agricoltori")) {
+            } else if (Utils.getRole().equals("agricoltori") || Utils.getRole().equals("agricoltori")) {
+                if (!programmaIrrigDao.getProgrammaIrrig(Integer.valueOf(request.params(":id"))).getUtenteId().equals(Utils.getUserId()))
+                    halt(401);
+            } else halt(401);
+            // get the body of the HTTP request
+            Map addRequest = gson.fromJson(request.body(), Map.class);
+
+            // check whether everything is in place
+            if (request.params(":id") != null && addRequest != null && addRequest.containsKey("agricoltori")) {
+                String agricoltori = String.valueOf(addRequest.get("agricoltori"));
+                String date = String.valueOf(request.params(":date"));
+                int oraInizio = Integer.valueOf(request.params(":oraInizio"));
+                int oraFine = Integer.valueOf(request.params(":oraFine"));
+                int aziendaAgricolaId = Integer.valueOf(request.params(":aziendaAgricolaId"));
+                String serraId = String.valueOf(request.params(":serraId"));
+                String utenteId = Utils.getUserId();
+
+                ProgrammaIrrig programmi = new ProgrammaIrrig(date, oraInizio, oraFine, aziendaAgricolaId ,serraId, utenteId);
+                programmaIrrigDao.addProgrammaIrrig(programmi);
+
+                // if success, prepare a suitable HTTP response code
+                response.status(201);
+            }
+            else {
+                halt(400);
+            }
+
+            return "";
+        }, gson::toJson);
     }
 }

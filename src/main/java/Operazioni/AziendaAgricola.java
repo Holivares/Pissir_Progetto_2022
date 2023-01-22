@@ -2,24 +2,33 @@ package Operazioni;
 
 public class AziendaAgricola {
     private int id;
-    private String nome;
+    private String descrizione;
+    private String tipo;
 
-    public AziendaAgricola(int id, String nome) {
+
+    public AziendaAgricola(int id, String descrizione, String tipo) {
         this.id = id;
-        this.nome = nome;
+        this.descrizione = descrizione;
+        this.tipo = tipo;
+
 
     }
 
-    public AziendaAgricola(String nome){
-        this.nome = nome;
+    public AziendaAgricola(String descrizione,String tipo){
+        this.descrizione = descrizione;
     }
 
     public int getId()
     {
         return id;
     }
-    public String getNome()
+    public String getDescrizione()
     {
-        return nome;
+        return descrizione;
     }
+
+    public String getTipo() {
+        return tipo;
+    }
+
 }

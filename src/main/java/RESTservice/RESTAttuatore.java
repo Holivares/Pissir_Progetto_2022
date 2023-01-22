@@ -1,9 +1,9 @@
 package RESTservice;
 import OperazioniModel.AttuaroreJs;
-import Ruoli.Utils;
 import com.google.gson.Gson;
 import Operazioni.Attuatore;
 import OperazioniDao.GestioneAttuatore;
+import jwtToken.Utils;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class RESTAttuatore {
 
         // Ottieni tutte le operazioni
         get(baseURL + "/attuatori", (request, response) -> {
-            if(!Utils.getRuolo().equals("agricoltori")) halt(401);
+            if(!Utils.getRole().equals("agricoltori")) halt(401);
             // set a proper response code and type
             response.type("application/json");
             response.status(200);
@@ -32,8 +32,8 @@ public class RESTAttuatore {
             return allAttuatori;
         }, gson::toJson);
 
-        put(baseURL + "/actuatori/updatemanual/:id", "application/json", (request, response) -> {
-            if(!Utils.getRuolo().equals("agricoltori")) halt(401);
+        put(baseURL + "/attuatori/updatemanual/:id", "application/json", (request, response) -> {
+            if(!Utils.getRole().equals("agricoltori")) halt(401);
             // Ottieni il corpo HTTP request
             Map addRequest = gson.fromJson(request.body(), Map.class);
             Attuatore attuatore = null;
@@ -51,8 +51,8 @@ public class RESTAttuatore {
             return attuatore;
         }, gson::toJson);
 
-        put(baseURL + "/actuatori/updatestate/:id", "application/json", (request, response) -> {
-            if(!Utils.getRuolo().equals("agricoltori")) halt(401);
+        put(baseURL + "/attuatori/updatestato/:id", "application/json", (request, response) -> {
+            if(!Utils.getRole().equals("agricoltori")) halt(401);
             // Ottieni il corpo di HTTP request
             Map addRequest = gson.fromJson(request.body(), Map.class);
             Attuatore attuatore = null;

@@ -5,24 +5,27 @@ public class Serra {
     private String aziendaAgricolaId;
     private String descrizione;
     private String tipoColtura ;
+    private String utenteId;
 
 
-    public Serra(int id, String idAzienda, String descrizione, String tipo) {
+    public Serra(int id, String aziendaAgricolaId, String descrizione, String tipoColtura, String utenteId) {
         this.id = id;
         this.aziendaAgricolaId = aziendaAgricolaId;
         this.descrizione = descrizione;
         this.tipoColtura = tipoColtura;
+        this.utenteId = utenteId;
 
     }
  /**
      * Overloaded constructore. Crea una serra senza un dato id.
      *
      */
-    public Serra(String idAzienda, String descrizione, String tipoColtura)
+    public Serra(String aziendaAgricolaId, String descrizione, String tipoColtura, String utenteId)
     {
         this.aziendaAgricolaId = aziendaAgricolaId;
         this.descrizione = descrizione;
         this.tipoColtura = tipoColtura;
+        this.utenteId = utenteId;
     }
 
     public int getId() {
@@ -37,9 +40,13 @@ public class Serra {
         return descrizione;
     }
 
-    public String getTipo() {
+    public String getTipoColtura() {
         return tipoColtura;
     }
 
+
+    public String getUtenteId() {
+        return utenteId;
+    }
 }
 

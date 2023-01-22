@@ -5,14 +5,14 @@ public class SensoreJs {
     private String descrizione;
     private String tipo;
     private String ultimaMisura;
-    private int serraId;
+    private int aziendaAgricolaId;
 
-    public SensoreJs(int id, String descrizione, String tipo,String ultimaMisura, int serraId) {
+    public SensoreJs(int id, String descrizione, String tipo,String ultimaMisura, int aziendaAgricolaId) {
         this.id = id;
         this.descrizione = descrizione;
         this.tipo = tipo;
         this.ultimaMisura = ultimaMisura;
-        this.serraId = serraId;
+        this.aziendaAgricolaId = aziendaAgricolaId;
     }
     public int getId() { return id; }
     public String getDescrizione() { return descrizione;}
@@ -22,5 +22,5 @@ public class SensoreJs {
     public String getUltimaMisura() {
         return ultimaMisura;
     }
-    public int getSerraId() { return serraId; }
+    public int getAziendaAgricolaId() { return aziendaAgricolaId; }
 }

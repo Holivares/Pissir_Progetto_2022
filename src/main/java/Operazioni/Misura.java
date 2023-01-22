@@ -13,32 +13,32 @@ public class Misura {
     private String misurazioni;
     private String dateTime;
     private int sensoreId;
-    private int serraId;
+    private int aziendaAgricolaId;
 
 
     /**
      * @param id rappresenta l'identificativo unico del programma d'irrigazione
      */
-    public Misura(int id, String tipo, String misurazioni, String dateTime, int sensoreId, int serraId) {
+    public Misura(int id, String tipo, String misurazioni, String dateTime, int sensoreId, int aziendaAgricolaId) {
         this.id = id;
         this.tipo = tipo;
         this.misurazioni = misurazioni;
         this.dateTime = dateTime;
         this.sensoreId = sensoreId;
-        this.serraId = serraId;
+        this.aziendaAgricolaId = aziendaAgricolaId;
     }
 
     /**
      * Overloaded constructore.Crea un programma d'irrigazione senza un dato id.
      *
      */
-    public Misura(String tipo, String misurazioni, String dateTime, int sensoreId, int serraId) {
+    public Misura(String tipo, String misurazioni, String dateTime, int sensoreId, int aziendaAgricolaId) {
         this.id = 0;
         this.tipo = tipo;
         this.misurazioni = misurazioni;
         this.dateTime = dateTime;
         this.sensoreId = sensoreId;
-        this.serraId = serraId;
+        this.aziendaAgricolaId = aziendaAgricolaId;
     }
 
     public int getId() {
@@ -61,7 +61,7 @@ public class Misura {
         return sensoreId;
     }
 
-    public int getSerraId() {
-        return serraId;
+    public int getAziendaAgricolaId() {
+        return aziendaAgricolaId;
     }
 }

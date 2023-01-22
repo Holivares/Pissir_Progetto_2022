@@ -1,3 +1,4 @@
+import MQTT.GestioneMisureLocaliMQTT;
 import RESTservice.*;
 import com.google.gson.Gson;
 import static spark.Spark.*;
@@ -41,9 +42,10 @@ public class Service {
         RESTSensore.REST(gson, baseURL);
         RESTMisura.REST(gson, baseURL);
         RESTUtente.REST(gson, baseURL);
+        RESTSerra.REST(gson, baseURL);
 
 
-//        GestioneMisureLocaliMQTT gestioneMisureLocaliMQTT = new GestioneMisureLocaliMQTT();
-//        gestioneMisureLocaliMQTT.MQTTInit();
+        GestioneMisureLocaliMQTT gestioneMisureLocaliMQTT = new GestioneMisureLocaliMQTT();
+        gestioneMisureLocaliMQTT.MQTTInit();
     }
 }

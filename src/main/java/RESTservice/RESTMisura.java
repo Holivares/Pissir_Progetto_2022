@@ -2,9 +2,8 @@ package RESTservice;
 
 import Operazioni.Misura;
 import OperazioniDao.GestioneMisura;
-import Ruoli.Utils;
 import com.google.gson.Gson;
-
+import jwtToken.Utils;
 import java.util.List;
 
 import static spark.Spark.*;
@@ -17,19 +16,19 @@ public class RESTMisura {
 
         // Ottieni tutte le operazioni
         get(baseURL + "/misure", (request, response) -> {
-            if(!Utils.getRuolo().equals("agricoltori")) halt(401);
+            if(!Utils.getRole().equals("agricoltori")) halt(401);
             // impostare un codice e un tipo di risposta appropriati
             response.type("application/json");
             response.status(200);
 
             // Ottieni tutte le operazioni dal DB
-            List<Misura> allMisure = misuraDao.getAllMisuri(request.queryMap());
+            List<Misura> allMisure = misuraDao.getAllMisure(request.queryMap());
 
             return allMisure;
         }, gson::toJson);
 
         delete(baseURL + "/misure/:id", "application/json", (request, response) -> {
-            if(!Utils.getRuolo().equals("agricoltori")) halt(401);
+            if(!Utils.getRole().equals("agricoltori")) halt(401);
 
             if(request.params(":id")!=null) {
                 // aggiungi un'operazione nel DB
